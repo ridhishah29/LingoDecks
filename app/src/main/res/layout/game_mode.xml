@@ -9,49 +9,64 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Game Mode"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:textSize="30dp"
-        app:layout_constraintVertical_bias="0.033"
-        android:id="@+id/textView" />
+        android:textSize="40dp"
+        android:textColor="@android:color/black"
+        android:id="@+id/textView"
+        android:layout_marginBottom="10dp"/>
 
     <Button
-        android:layout_width="124dp"
-        android:layout_height="59dp"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
         android:text="Quickdraw"
+        android:textAllCaps="false"
         android:textColor="#000"
-        android:background="#fff"
-        android:id="@+id/quick_btn" />
+        android:backgroundTint="#fff"
+        android:id="@+id/quick_btn"
+        android:layout_marginBottom="20dp"
+        android:textSize="25dp"
+        android:padding="15dp"/>
     <Button
-        android:layout_width="124dp"
-        android:layout_height="59dp"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
         android:text="Flashcards"
-        android:background="#000"
+        android:textAllCaps="false"
+        android:backgroundTint="#000"
         android:textColor="#fff"
-        android:id="@+id/flash_btn" />
+        android:id="@+id/flash_btn"
+        android:layout_marginBottom="20dp"
+        android:textSize="25dp"
+        android:padding="15dp"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Make your own"
-        android:textSize="30dp"
-        android:id="@+id/textView2" />
+        android:textColor="@android:color/black"
+        android:textSize="40dp"
+        android:id="@+id/textView2"
+        android:layout_marginBottom="10dp"/>
 
     <Button
         android:id="@+id/create_btn"
-        android:layout_width="124dp"
-        android:layout_height="59dp"
-        android:background="#cffaf5"
-        android:text="Create Cards" />
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#cffaf5"
+        android:text="Create Cards"
+        android:textSize="25dp"
+        android:textAllCaps="false"
+        android:layout_marginBottom="20dp"
+        android:padding="15dp"/>
 
     <Button
-        android:layout_width="124dp"
-        android:layout_height="59dp"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
         android:text="Custom Cards"
+        android:textAllCaps="false"
+        android:textSize="25dp"
         android:id="@+id/custom_btn"
-        android:background="#e9e292"/>
+        android:backgroundTint="#e9e292"
+        android:layout_marginBottom="20dp"
+        android:padding="15dp"/>
 
 
 </LinearLayout>
