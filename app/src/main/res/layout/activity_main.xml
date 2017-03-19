@@ -29,16 +29,18 @@
         android:layout_height="59dp"
         android:layout_marginBottom="10dp"
         android:text="German"
+        android:onClick="setLanguage"
         android:textSize="20dp"
         android:backgroundTint="#e1faff"
-        android:id="@+id/button"
+        android:id="@+id/german_button"
         />
     <Button
         android:layout_width="154dp"
         android:layout_height="59dp"
         android:textSize="20dp"
         android:text="Spanish"
+        android:onClick="setLanguage"
         android:backgroundTint="#e1faff"
-        android:id="@+id/button2" />
+        android:id="@+id/spanish_button" />
 
 </LinearLayout>
