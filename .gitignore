@@ -17,10 +17,6 @@ out/
 .gradle/
 build/
 
-# User-specific configurations
-.idea/workspace.xml
-.idea/libraries
-
 # Local configuration file (sdk path, etc)
 local.properties
 
@@ -93,3 +89,5 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 .idea/workspace.xml
+.idea/workspace.xml
+.idea/libraries
