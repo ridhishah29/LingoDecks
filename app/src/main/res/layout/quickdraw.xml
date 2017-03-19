@@ -59,7 +59,7 @@
         android:padding="5dp"
         android:text="13"
         android:textColor="@color/timer_colour"
-        android:textSize="30dp"
+        android:textSize="30sp"
         android:layout_marginBottom="10dp"/>
 
         <TextView
@@ -68,7 +68,7 @@
             android:background="@drawable/border_style"
             android:gravity="center"
             android:layout_gravity="center"
-            android:padding="5dp"
+            android:padding="20dp"
             android:text="Word"
             android:textSize="50dp"
             android:layout_marginBottom="50dp"/>
@@ -88,21 +88,19 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
-                android:background="@drawable/border_style"
-                android:backgroundTint="#fff7b1"
+                android:background="@drawable/answer_border"
                 android:gravity="center"
                 android:padding="5dp"
                 android:text="Answer 1"
                 android:layout_marginRight="10dp"
                 android:textSize="30dp"
-
                 android:layout_weight="1"/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
-                android:background="@drawable/border_style"
-                android:backgroundTint="#e0ffb4"
+                android:background="@drawable/answer_border"
+
                 android:gravity="center"
                 android:padding="5dp"
                 android:text="Answer 2"
@@ -132,8 +130,8 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
-                android:background="@drawable/border_style"
-                android:backgroundTint="#ffd7ad"
+                android:background="@drawable/answer_border"
+
                 android:gravity="center"
                 android:padding="5dp"
                 android:text="Answer 3"
@@ -145,8 +143,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
-                android:background="@drawable/border_style"
-                android:backgroundTint="#ffbcbc"
+                android:background="@drawable/answer_border"
                 android:gravity="center"
                 android:padding="5dp"
                 android:text="Answer 4"
