@@ -90,4 +90,4 @@ $RECYCLE.BIN/
 *.lnk
 .idea/workspace.xml
 .idea/workspace.xml
-.idea/libraries
+idea/libraries
