@@ -38,7 +38,7 @@
     <Button
         android:layout_width="75dp"
         android:layout_height="wrap_content"
-        android:text="<"
+        android:text="b"
         android:layout_alignLeft="@+id/quickdraw_header"
         android:textAllCaps="false"
         android:textColor="#fff"
