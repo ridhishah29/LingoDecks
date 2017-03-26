@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -29,6 +30,7 @@ public class MainActivity extends Activity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
     }
 
     public void setLanguage(View view){
@@ -37,6 +39,9 @@ public class MainActivity extends Activity{
 
         if(button_clicked.equals("German")){
             //set language to be german
+            FetchTranslation task = new FetchTranslation();
+            task.execute();
+
             Intent intent = new Intent(this, GameModeActivity.class);
             startActivity(intent);
         }
@@ -47,14 +52,15 @@ public class MainActivity extends Activity{
         }
     }
 
-    class FetchTranslation extends AsyncTask<String, String, String> {
+    class FetchTranslation extends AsyncTask<Void, String, String> {
         String apiKey = "trnsl.1.1.20170322T223343Z.49a364d7daed7f83.b32aca1f9e1461aa3089ebc0f88570e69f0c9873";
-        String languageDirection = "en-it";
+        String languageDirection = "en-de";
         String result = "";
-        String text = "";
+        //Dummy data
+        String text = "The cat sat on the mat";
 
         @Override
-        protected String doInBackground(String... params) {
+        protected String doInBackground(Void... voids) {
             String translationResult;
 
             // Example API call
@@ -72,18 +78,16 @@ public class MainActivity extends Activity{
                     .appendQueryParameter(LANGUAGE, languageDirection)
                     .build();
 
-            //check connectivity m
-
+            //check connectivity
             ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
             if (networkInfo != null && networkInfo.isConnected()){
                 result = GET(uriBuilder.toString());
 
                 translationResult = getTranslationFromJson(result);
+
                 if(translationResult != null){
-
-                    Log.i("translation", translationResult);
-
+                    Log.v("Translation", translationResult);
                 }
             }
             else{
@@ -96,21 +100,25 @@ public class MainActivity extends Activity{
     }
     // Take the raw JSON data to get the data we need?
     private String getTranslationFromJson(String jsonStr) {
-//        String resultStr = new String();
-//        try{
-//            // JSON objects that need to be extracted
-//            final String LANGUAGE = "lang";
-//            final String TEXT = "text";
-//
-//            JSONObject textJSON = new JSONObject(jsonStr);
-//
-//        }catch(JSONException e){
-//            return null;
-//        }
-//        return resultStr;
+        String resultStr;
+
+        try{
+            // JSON objects that need to be extracted
+            final String LANGUAGE = "lang";
+            final String TEXT = "text";
+
+            JSONObject textJSON = new JSONObject(jsonStr);
+            JSONArray resultArray = textJSON.getJSONArray(TEXT);
+            resultStr = resultArray.toString();
+
+        }catch(JSONException e){
+            return null;
+        }
+        return resultStr;
     }
 
     private String GET(String url) {
+
         InputStream is;
         String result = "";
         URL request = null;
