@@ -2,7 +2,9 @@
 <resources>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+
+    <color name="colorAccent">#f2a2e9</color>
+    <color name="colorAccent_Old">#FF4081</color>
     <color name="flashcard_color">#c2eae4</color>
     <color name="quickdraw_color">#ffd7ad</color>
     <color name="timer_colour">#E82C0C</color>
