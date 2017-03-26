@@ -96,6 +96,18 @@ public class MainActivity extends Activity{
     }
     // Take the raw JSON data to get the data we need?
     private String getTranslationFromJson(String jsonStr) {
+//        String resultStr = new String();
+//        try{
+//            // JSON objects that need to be extracted
+//            final String LANGUAGE = "lang";
+//            final String TEXT = "text";
+//
+//            JSONObject textJSON = new JSONObject(jsonStr);
+//
+//        }catch(JSONException e){
+//            return null;
+//        }
+//        return resultStr;
     }
 
     private String GET(String url) {
