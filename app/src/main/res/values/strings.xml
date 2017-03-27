@@ -3,4 +3,5 @@
     <string name="flashcard_mode">Flashcard</string>
     <string name="flashcard_instruction">Choose the number of cards</string>
     <string name="quickdraw_mode">Quickdraw</string>
+    <string name="title_activity_quickdraw">Quickdraw</string>
 </resources>

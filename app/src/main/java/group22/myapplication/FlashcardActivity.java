@@ -14,6 +14,7 @@ public class FlashcardActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.flashcard_menu);
+
     }
 
     public void setLanguage(View view){
@@ -52,7 +53,7 @@ public class FlashcardActivity extends Activity {
                     setContentView(R.layout.flashcard_picture);
                     cardValue = /*get image name*/"";
                 } else if (cardType.equals("Word")) {
-                    setContentView(R.layout.flashcard_word);
+                    setContentView(R.layout.flashcard_text);
                     cardValue = //((TextView) view).getText().toString();
                                 "test";  //dummy variable
                 } else {

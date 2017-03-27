@@ -24,7 +24,8 @@
         android:id="@+id/quick_btn"
         android:layout_marginBottom="20dp"
         android:textSize="25dp"
-        android:padding="15dp"/>
+        android:padding="15dp"
+        android:onClick="setModes" />
     <Button
         android:layout_width="300dp"
         android:layout_height="wrap_content"
@@ -35,7 +36,8 @@
         android:id="@+id/flash_btn"
         android:layout_marginBottom="20dp"
         android:textSize="25dp"
-        android:padding="15dp"/>
+        android:padding="15dp"
+        android:onClick="setModes" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -55,7 +57,8 @@
         android:textSize="25dp"
         android:textAllCaps="false"
         android:layout_marginBottom="20dp"
-        android:padding="15dp"/>
+        android:padding="15dp"
+        android:onClick="setModes" />
 
     <Button
         android:layout_width="300dp"
@@ -66,7 +69,8 @@
         android:id="@+id/custom_btn"
         android:backgroundTint="#e9e292"
         android:layout_marginBottom="20dp"
-        android:padding="15dp"/>
+        android:padding="15dp"
+        android:onClick="setModes" />
 
 
 </LinearLayout>

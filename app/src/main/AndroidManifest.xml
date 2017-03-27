@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="group22.myapplication">
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -17,8 +19,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".GameModeActivity"></activity>
-        <activity android:name=".FlashcardActivity"></activity>
+        <activity android:name=".GameModeActivity" />
+        <activity android:name=".FlashcardActivity" />
+        <activity
+            android:name=".Quickdraw"
+            android:label="@string/title_activity_quickdraw"
+            android:parentActivityName=".GameModeActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="group22.myapplication.GameModeActivity" />
+        </activity>
     </application>
 
 </manifest>
