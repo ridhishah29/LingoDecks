@@ -16,8 +16,8 @@ public class Quickdraw extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-            setContentView(R.layout.quickdraw);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        setContentView(R.layout.quickdraw);
+
 
         button = (Button) findViewById(R.id.start_timer);
         textView = (TextView) findViewById((R.id.timer));
