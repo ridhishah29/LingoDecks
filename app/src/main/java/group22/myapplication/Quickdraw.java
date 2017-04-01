@@ -18,7 +18,6 @@ public class Quickdraw extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.quickdraw);
 
-
         button = (Button) findViewById(R.id.start_timer);
         textView = (TextView) findViewById((R.id.timer));
 
