@@ -43,7 +43,7 @@ public class MainActivity extends Activity{
         // if the current time is past the set time, then a day is added and the notification will not appear until the next day at 6PM.
         if (Calendar.getInstance().after(calendar)) {
             Log.v("Here", "Day added");
-            calendar.add(Calendar.DAY_OF_MONTH, 1);
+            calendar.add(Calendar.DAY_OF_YEAR, 1);
         }
 
         Intent intent = new Intent(this, NotificationReceiver.class);
