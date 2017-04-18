@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:text="@string/flashcard_mode"
+        android:textSize="35dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textColor="@android:color/black"
+        android:background="@color/flashcard_color"/>
+
+    <TextView
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:text="@string/flashcard_instruction"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_marginTop="25dp"
+        android:textSize="20dp"/>
+
+    <Button
+        android:layout_width="250dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center"
+        android:text="10 Cards"
+        android:textAllCaps="false"
+        android:textSize="23dp"
+        android:backgroundTint="#e0ffb4"/>
+
+    <Button
+        android:layout_width="250dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="center"
+        android:text="20 Cards"
+        android:textAllCaps="false"
+        android:textSize="23dp"
+        android:backgroundTint="#fff7b1"/>
+
+    <Button
+        android:layout_width="250dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="center"
+        android:text="40 Cards"
+        android:textAllCaps="false"
+        android:textSize="23dp"
+        android:backgroundTint="#ffd7ad"/>
+
+    <Button
+        android:layout_width="250dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="center"
+        android:text="100 Cards"
+        android:textAllCaps="false"
+        android:textSize="23dp"
+        android:backgroundTint="#ffbcbc"/>
+
+</LinearLayout>
