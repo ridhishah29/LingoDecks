@@ -24,20 +24,20 @@ public class Contract {
 
         //table for German Words
         public static final String TABLE_GERMAN = "German";
-        public static final String COLUMN_GER_ENG = "English Translation";
-        public static final String COLUMN_GER = "German Translation";
-        public static final String COLUMN_GER_PIC = "Picture Ref";
+        public static final String COLUMN_GER_ENG = "english";
+        public static final String COLUMN_GER = "german";
+        public static final String COLUMN_GER_PIC = "picture";
 
         //table for Spanish Words
         public static final String TABLE_SPANISH = "Spanish";
-        public static final String COLUMN_ESP_ENG = "English Translation";
-        public static final String COLUMN_ESP = "German Translation";
-        public static final String COLUMN_ESP_PIC = "Picture Ref";
+        public static final String COLUMN_ESP_ENG = "english";
+        public static final String COLUMN_ESP = "spanish";
+        public static final String COLUMN_ESP_PIC = "picture";
 
         //table for Player Scores
         public static final String TABLE_SCORE = "Scoreboard";
-        public static final String COLUMN_SCORES = "Score";
-        public static final String COLUMN_DATE = "Date";
+        public static final String COLUMN_SCORES = "score";
+        public static final String COLUMN_DATE = "date";
 
         public static Uri buildGermanUriWithID(long ID) {
             return ContentUris.withAppendedId(CONTENT_URI1, ID);
