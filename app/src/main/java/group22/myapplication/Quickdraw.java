@@ -18,17 +18,24 @@ public class Quickdraw extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.quickdraw);
 
-        button = (Button) findViewById(R.id.start_timer);
         textView = (TextView) findViewById((R.id.timer));
 
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                countdowntimer = new CountDownTimerClass(60000,1000);
-                countdowntimer.start();
-            }
+        if(savedInstanceState == null) {
+            countdowntimer = new CountDownTimerClass(60000, 1000);
+            countdowntimer.start();
+        } else {
+            String what = savedInstanceState.getString("key");
+            int whatty = Integer.parseInt(what);
+            countdowntimer = new CountDownTimerClass(whatty*1000,1000);
+            countdowntimer.start();
+        }
+    }
 
-        });
+    @Override
+    protected void onSaveInstanceState (Bundle outState) {
+        super.onSaveInstanceState(outState);
+        String rf = textView.getText().toString();
+        outState.putString("key", rf);
     }
 
     public class CountDownTimerClass extends CountDownTimer {
