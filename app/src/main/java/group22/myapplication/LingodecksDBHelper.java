@@ -66,9 +66,11 @@ class LingodecksDBHelper extends SQLiteOpenHelper {
         String[] spanish = {"Gato", "Perro", "Paraguas", "Espejo", "Lámpara", "Mesa", "Jersey", "Casa", "Vaso", "Auto"};
         String[] german = {"Katze", "Hund", "Regenschirm", "Spiegel", "Lampe", "Tabelle", "Jumper", "Haus", "Tasse", "Auto" };
 
-
-        db.execSQL("INSERT INTO German (english, german, picture) VALUES ('Cat', 'Katze', '');");
-
+        for(int i=0; i < 10; i++){
+            db.execSQL("INSERT INTO German (english, german, picture) VALUES (" + "'" + english[i] + "'" + "," + "'" + german[i]+ "'" +", '');");
+            db.execSQL("INSERT INTO Spanish (english, spanish, picture) VALUES (" + "'" + english[i] + "'" + "," + "'" + spanish[i]+ "'" +", '');");
+        }
+        
         Log.i("SQLiteSimpleDemoTEST", "LingodecksDBHelper onCreate()");
     }
 
