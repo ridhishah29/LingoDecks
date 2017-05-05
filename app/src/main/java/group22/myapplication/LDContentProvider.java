@@ -26,7 +26,7 @@ public class LDContentProvider extends ContentProvider {
     public static LingodecksDBHelper myDBHelper;
 
     private static final UriMatcher buildUriMatcher() {
-        final UriMatcher matcher =new UriMatcher(UriMatcher.NO_MATCH);
+        final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
 
         matcher.addURI(Contract.CONTENT_AUTHORITY, "german", GERMAN);
         matcher.addURI(Contract.CONTENT_AUTHORITY, "german/#", GERMAN_ID);
@@ -36,6 +36,7 @@ public class LDContentProvider extends ContentProvider {
         matcher.addURI(Contract.CONTENT_AUTHORITY, "score/#", SCORE_ID);
 
         return matcher;
+
     }
 
     public LDContentProvider() {
@@ -173,6 +174,7 @@ public class LDContentProvider extends ContentProvider {
     @Override
     public Uri insert(Uri uri, ContentValues values) {
         //Handles requests to insert a new row.
+
         int match_code = myUriMatcher.match(uri);
         Uri retUri = null;
 
