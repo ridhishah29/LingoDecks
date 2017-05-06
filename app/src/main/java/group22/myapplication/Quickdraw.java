@@ -30,6 +30,7 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
 
     private static final int GERMAN_LOADER = 1;
     boolean isRunning = false;
+    public AlertDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,9 +38,8 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
         setContentView(R.layout.quickdraw);
 
         textView = (TextView) findViewById((R.id.timer));
-
-
-        getLoaderManager().initLoader(GERMAN_LOADER, null, this);
+//
+//        getLoaderManager().initLoader(GERMAN_LOADER, null, this);
 
         //adapters are for listviews
 //        adapter = new SimpleCursorAdapter(
@@ -56,23 +56,25 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
         answer_3 = (TextView) findViewById(R.id.answer_3);
         answer_4 = (TextView) findViewById(R.id.answer_4);
 
-        if (savedInstanceState == null) {
-            countdowntimer = new CountDownTimerClass(60000, 1000);
-            countdowntimer.start();
-
-        } else {
-            int getTimerState = Integer.parseInt(savedInstanceState.getString("key"));
-            countdowntimer = new CountDownTimerClass(getTimerState * 1000, 1000);
-            countdowntimer.start();
-        }
-
-
         //opens custom dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.pause_dialog,null);
         builder.setView(dialogView);
-        final AlertDialog dialog = builder.create();
+        dialog = builder.create();
+//
+//        if (savedInstanceState == null) {
+//            Log.v("nope", "nope");
+//            countdowntimer = new CountDownTimerClass(60000, 1000);
+//            countdowntimer.start();
+//
+//        } else {
+//            Log.v("yes", "yes");
+//            int getTimerState = Integer.parseInt(savedInstanceState.getString("key"));
+//            countdowntimer = new CountDownTimerClass(getTimerState * 1000, 1000);
+//            countdowntimer.start();
+//
+//        }
 
         Button pause = (Button) findViewById(R.id.pause_btn);
         pause.setOnClickListener(new View.OnClickListener() {
@@ -82,7 +84,7 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
                 Button btnresume = (Button) dialog.findViewById(R.id.btn_resumeGame);
                 btnresume.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View view) {
-                        int pausedcount = Integer.parseInt(textView.getText().toString());
+                        int pausedcount = Integer.parseInt(setTimerState.toString());
                         countdowntimer = new CountDownTimerClass(pausedcount*1000, 1000);
                         countdowntimer.start();
                         dialog.dismiss();
@@ -103,11 +105,33 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
     @Override
     protected void onResume() {
         super.onResume();
+        Log.v("opensesame1", Boolean.toString(dialog.isShowing()));
+        if (!setTimerState.toString().equals("") && diagIsOpen.equals(("false"))) {
+            int pausedcount = Integer.parseInt(setTimerState.toString());
+            countdowntimer = new CountDownTimerClass(pausedcount*1000, 1000);
+            countdowntimer.start();
+            Log.v("timer started", "Nope");
+        }
+        else if (!setTimerState.toString().equals("") && diagIsOpen.equals(("true"))) {
+            int pausedcount = Integer.parseInt(setTimerState.toString());
+            countdowntimer = new CountDownTimerClass(pausedcount*1000, 1000);
+            countdowntimer.start();
+            countdowntimer.cancel();
+            Log.v("timer started", "maybe");
+        }
+        else{
+            countdowntimer = new CountDownTimerClass(60000, 1000);
+            countdowntimer.start();
+            Log.v("timer started", "yues");
+        }
+
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        countdowntimer.cancel();
+        Log.v("opensesame2", Boolean.toString(dialog.isShowing()));
     }
 
     @Override
@@ -122,30 +146,30 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        if(id == 1) {
-            String[] columns = {
-                    Contract.Lingodecks_Tables._ID,
-                    Contract.Lingodecks_Tables.COLUMN_GER,
-                    Contract.Lingodecks_Tables.COLUMN_GER_ENG
-            };
-            return new CursorLoader(this, Contract.Lingodecks_Tables.CONTENT_URI1, columns, null, null, null);
-        }
+//        if(id == 1) {
+//            String[] columns = {
+//                    Contract.Lingodecks_Tables._ID,
+//                    Contract.Lingodecks_Tables.COLUMN_GER,
+//                    Contract.Lingodecks_Tables.COLUMN_GER_ENG
+//            };
+//            return new CursorLoader(this, Contract.Lingodecks_Tables.CONTENT_URI1, columns, null, null, null);
+//        }
         return null;
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        if(cursor != null && cursor.getCount() > 0){
-            StringBuilder stringBuilderQueryResult = new StringBuilder("");
-            while(cursor.moveToNext()){
-                stringBuilderQueryResult.append(cursor.getString(1));
-            }
-            answer_1.setText(stringBuilderQueryResult.toString());
-
-        }
-        else{
-            answer_1.setText("No answer here");
-        }
+//        if(cursor != null && cursor.getCount() > 0){
+//            StringBuilder stringBuilderQueryResult = new StringBuilder("");
+//            while(cursor.moveToNext()){
+//                stringBuilderQueryResult.append(cursor.getString(1));
+//            }
+//            answer_1.setText(stringBuilderQueryResult.toString());
+//
+//        }
+//        else{
+//            answer_1.setText("No answer here");
+//        }
     }
 
     @Override
@@ -162,10 +186,23 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
         dialog.getWindow().setAttributes(lp);
     }
 
+    String setTimerState = new String();
+    String diagIsOpen = new String();
+    @Override
     protected void onSaveInstanceState (Bundle outState) {
         super.onSaveInstanceState(outState);
-        String setTimerState = textView.getText().toString();
+        setTimerState = textView.getText().toString();
+        diagIsOpen = Boolean.toString(dialog.isShowing());
         outState.putString("key", setTimerState);
+        outState.putString("isOpen", diagIsOpen);
+        Log.v("testest", diagIsOpen);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        setTimerState = savedInstanceState.getString("key");
+        diagIsOpen = savedInstanceState.getString("isOpen");
     }
 
     public class CountDownTimerClass extends CountDownTimer {
