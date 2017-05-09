@@ -39,7 +39,16 @@
             android:name=".NotificationReceiver"
             android:enabled="true"
             android:exported="true"
-            android:process=":remote"></receiver>
+            android:process=":remote">
+
+        </receiver>
+
+        <provider
+            android:name="group22.myapplication.LDContentProvider"
+            android:authorities="group22.myapplication"
+            android:enabled="true">
+        </provider>
+
     </application>
 
 </manifest>
