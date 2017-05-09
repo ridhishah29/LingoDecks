@@ -5,55 +5,49 @@
     android:layout_height="match_parent"
     android:weightSum = "2">
 
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-    <TextView
-        android:id="@+id/quickdraw_header"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:background="@color/quickdraw_color"
-        android:gravity="center"
-        android:padding="5dp"
-        android:text="@string/quickdraw_mode"
-        android:textColor="@android:color/black"
-        android:textSize="35dp"
-        android:layout_marginBottom="10dp"/>
+        android:layout_height="wrap_content">
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/start_timer"/>
+        <TextView
+            android:id="@+id/quickdraw_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="10dp"
+            android:background="@color/quickdraw_color"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="@string/quickdraw_mode"
+            android:textColor="@android:color/black"
+            android:textSize="35dp" />
 
-    <Button
-        android:layout_width="75dp"
-        android:layout_height="wrap_content"
-        android:text="||"
-        android:layout_alignRight="@+id/quickdraw_header"
-        android:textColor="#fff"
-        android:backgroundTint="@color/quickdraw_color"
-        android:id="@+id/pause_btn"
-        android:layout_marginBottom="10dp"
-        android:padding="5dp"
-        android:textSize="30dp"
-        android:textStyle="bold"
-        />
+        <Button
+            android:id="@+id/pause_btn"
+            android:layout_width="75dp"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@+id/quickdraw_header"
+            android:layout_marginBottom="10dp"
+            android:backgroundTint="@color/quickdraw_color"
+            android:padding="5dp"
+            android:text="||"
+            android:textColor="#fff"
+            android:textSize="30dp"
+            android:textStyle="bold" />
 
-    <Button
-        android:layout_width="75dp"
-        android:layout_height="wrap_content"
-        android:text="b"
-        android:layout_alignLeft="@+id/quickdraw_header"
-        android:textAllCaps="false"
-        android:textColor="#fff"
-        android:backgroundTint="@color/quickdraw_color"
-        android:id="@+id/back_btn"
-        android:layout_marginBottom="10dp"
-        android:padding="5dp"
-        android:textSize="40dp"
-        />
-</RelativeLayout>
+        <Button
+            android:id="@+id/back_btn"
+            android:layout_width="75dp"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/quickdraw_header"
+            android:layout_marginBottom="10dp"
+            android:backgroundTint="@color/quickdraw_color"
+            android:padding="5dp"
+            android:text="b"
+            android:textAllCaps="false"
+            android:textColor="#fff"
+            android:textSize="40dp" />
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/timer"
@@ -83,47 +77,47 @@
         android:textSize="40dp" />
 
     <RelativeLayout
-        android:layout_width = "fill_parent"
-        android:layout_height = "wrap_content">
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
         <LinearLayout
-            android:layout_width = "fill_parent"
-            android:layout_height = "wrap_content"
-            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="30dp"
-            android:weightSum = "2"
-            android:layout_marginRight="20dp"
             android:layout_marginLeft="20dp"
-            >
+            android:layout_marginRight="20dp"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
                 android:background="@drawable/answer_border"
                 android:gravity="center"
                 android:padding="5dp"
                 android:text="Answer 1"
-                android:layout_marginRight="10dp"
-                android:textSize="30dp"
-                android:layout_weight="1"/>
+                android:textSize="30dp" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/answer_border"
+                android:layout_marginLeft="10dp"
 
+                android:layout_weight="1"
+                android:background="@drawable/answer_border"
                 android:gravity="center"
                 android:padding="5dp"
                 android:text="Answer 2"
-                android:textSize="30dp"
-                android:layout_marginLeft="10dp"
-                android:layout_weight="1"/>
-            </LinearLayout>
+                android:textSize="30dp" />
+        </LinearLayout>
 
         <LinearLayout
-            android:layout_width = "fill_parent"
-            android:layout_height = "wrap_content"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:weightSum = "2">
-        </LinearLayout>
+            android:weightSum="2"></LinearLayout>
     </RelativeLayout>
 
     <RelativeLayout

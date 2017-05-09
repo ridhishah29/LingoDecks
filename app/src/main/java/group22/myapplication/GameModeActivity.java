@@ -27,7 +27,6 @@ public class GameModeActivity extends Activity{
         button_clicked = ((Button) view).getText().toString();
 
         if(button_clicked.equals("Quickdraw")){
-
             Intent intent = new Intent(this, Quickdraw.class);
             startActivity(intent);
         }
@@ -38,7 +37,7 @@ public class GameModeActivity extends Activity{
         }
         else if(button_clicked.equals("Create Cards")){
             //set language to be spanish
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(this, CreateWordCard.class);
             startActivity(intent);
         }
         else if(button_clicked.equals("Custom Cards")){

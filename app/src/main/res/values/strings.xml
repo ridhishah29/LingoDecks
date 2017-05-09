@@ -4,4 +4,6 @@
     <string name="flashcard_instruction">Choose the number of cards</string>
     <string name="quickdraw_mode">Quickdraw</string>
     <string name="title_activity_quickdraw">Quickdraw</string>
+    <string name="title_create_word">Create Word</string>
+
 </resources>

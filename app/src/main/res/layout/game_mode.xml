@@ -52,13 +52,13 @@
         android:id="@+id/create_btn"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:backgroundTint="#cffaf5"
-        android:text="Create Cards"
-        android:textSize="25dp"
-        android:textAllCaps="false"
         android:layout_marginBottom="20dp"
+        android:backgroundTint="#cffaf5"
+        android:onClick="setModes"
         android:padding="15dp"
-        android:onClick="setModes" />
+        android:text="Create Cards"
+        android:textAllCaps="false"
+        android:textSize="25dp" />
 
     <Button
         android:layout_width="300dp"

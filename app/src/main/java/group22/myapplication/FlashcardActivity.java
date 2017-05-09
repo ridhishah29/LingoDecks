@@ -24,9 +24,9 @@ public class FlashcardActivity extends Activity {
         String translationInput="";
         int numOfCards=0;
         int counter=0;
-        int score=0;
         button_clicked = ((Button) view).getText().toString();
 
+        int score=0;
         if(button_clicked.equals("10 Cards")) {
             numOfCards = 10;
         }
