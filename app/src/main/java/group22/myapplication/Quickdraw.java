@@ -3,6 +3,7 @@ package group22.myapplication;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -20,13 +21,19 @@ import android.widget.Button;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Random;
+
 public class Quickdraw extends Activity implements android.app.LoaderManager.LoaderCallbacks<Cursor> {
     private LingodecksDBHelper DBHelper;
     private SQLiteDatabase db;
     private Button button;
-    TextView textView, answer_1, answer_2, answer_3, answer_4;
+    TextView textView, answer_1, answer_2, answer_3, answer_4, question_word;
     CountDownTimer countdowntimer;
     SimpleCursorAdapter adapter;
+    ArrayList<String> answerList = new ArrayList<>();
+    ArrayList<String> wordList = new ArrayList<>();
 
     private static final int GERMAN_LOADER = 1;
     boolean isRunning = false;
@@ -38,23 +45,13 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
 
         textView = (TextView) findViewById((R.id.timer));
 
-
         getLoaderManager().initLoader(GERMAN_LOADER, null, this);
-
-        //adapters are for listviews
-//        adapter = new SimpleCursorAdapter(
-//                this,
-//                R.layout.quickdraw,
-//                null,
-//                new String[] {Contract.Lingodecks_Tables.COLUMN_GER},
-//                new int[]{ R.id.answer_1, R.id.answer_2, R.id.answer_3, R.id.answer_4 },
-//                0
-//        );
 
         answer_1 = (TextView) findViewById(R.id.answer_1);
         answer_2 = (TextView) findViewById(R.id.answer_2);
         answer_3 = (TextView) findViewById(R.id.answer_3);
         answer_4 = (TextView) findViewById(R.id.answer_4);
+        question_word = (TextView) findViewById(R.id.question_word);
 
         if (savedInstanceState == null) {
             countdowntimer = new CountDownTimerClass(60000, 1000);
@@ -65,7 +62,6 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
             countdowntimer = new CountDownTimerClass(getTimerState * 1000, 1000);
             countdowntimer.start();
         }
-
 
         //opens custom dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -103,11 +99,33 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
     @Override
     protected void onResume() {
         super.onResume();
+
+        SharedPreferences myPref = getSharedPreferences("WordData", MODE_PRIVATE);
+        int length = myPref.getInt("data_length", 0);
+
+        answerList.clear();
+
+        for(int i = 0; i < length; i++){
+            answerList.add(myPref.getString("answer_" + i, "no data"));
+
+            Log.v("Pref", myPref.getString("answer_" + i, "no data"));
+        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        SharedPreferences myPref = getSharedPreferences("WordData", MODE_PRIVATE);
+        SharedPreferences.Editor myEditor = myPref.edit();
+
+        myEditor.clear();
+
+        myEditor.putString("answer_1", answer_1.getText().toString());
+        myEditor.putString("answer_2", answer_2.getText().toString());
+        myEditor.putString("answer_3", answer_3.getText().toString());
+        myEditor.putString("answer_4", answer_4.getText().toString());
+
+        myEditor.commit();
     }
 
     @Override
@@ -128,30 +146,53 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
                     Contract.Lingodecks_Tables.COLUMN_GER,
                     Contract.Lingodecks_Tables.COLUMN_GER_ENG
             };
-            return new CursorLoader(this, Contract.Lingodecks_Tables.CONTENT_URI1, columns, null, null, null);
+
+            return new CursorLoader(this, Contract.Lingodecks_Tables.CONTENT_URI1, columns, null, null, "RANDOM()");
         }
         return null;
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        if(cursor != null && cursor.getCount() > 0){
-            StringBuilder stringBuilderQueryResult = new StringBuilder("");
-            while(cursor.moveToNext()){
-                stringBuilderQueryResult.append(cursor.getString(1));
-            }
-            answer_1.setText(stringBuilderQueryResult.toString());
+        if(cursor != null && cursor.getCount() > 0) {
+            wordList.clear();
+            answerList.clear();
 
-        }
-        else{
+            int count = 0;
+            while (cursor.moveToNext() && count < 4) {
+                answerList.add(cursor.getString(1));
+                wordList.add(cursor.getString(2));
+                count += 1;
+            }
+
+            //Create array of ints from 0 to 3 for randomisation
+            ArrayList<Integer> numList = new ArrayList<>();
+            for (int i = 0; i < 4; i++) {
+                numList.add(new Integer(i));
+            }
+            //randomise int list
+            Collections.shuffle(numList);
+
+            //Create a random number for the question
+            Random rand = new Random();
+            int randInt = rand.nextInt(4);
+
+
+            //assign positions for answers and choose a question from list
+            question_word.setText(wordList.get(numList.get(randInt)));
+            answer_1.setText(answerList.get(numList.get(0)));
+            answer_2.setText(answerList.get(numList.get(1)));
+            answer_3.setText(answerList.get(numList.get(2)));
+            answer_4.setText(answerList.get(numList.get(3)));
+        }else{
             answer_1.setText("No answer here");
         }
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        adapter.swapCursor(null);
-        Log.v("reset", "reset");
+//        adapter.swapCursor(null);
+        loader = null;
     }
     // prevent pause screen open when orientation changes
     private void keepDialogOpen(Dialog dialog) {
@@ -162,10 +203,29 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
         dialog.getWindow().setAttributes(lp);
     }
 
+    @Override
     protected void onSaveInstanceState (Bundle outState) {
         super.onSaveInstanceState(outState);
         String setTimerState = textView.getText().toString();
+//        String answer_one = answer_1.getText().toString();
+//        String answer_two = answer_2.getText().toString();
+//        String answer_three = answer_3.getText().toString();
+//        String answer_four = answer_4.getText().toString();
+
         outState.putString("key", setTimerState);
+//        outState.putString("answer_1", answer_one);
+//        outState.putString("answer_2", answer_two);
+//        outState.putString("answer_3", answer_three);
+//        outState.putString("answer_4", answer_four);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+//        answer_1.setText(savedInstanceState.getString("answer_1"));
+//        answer_2.setText(savedInstanceState.getString("answer_2"));
+//        answer_3.setText(savedInstanceState.getString("answer_3"));
+//        answer_4.setText(savedInstanceState.getString("answer_4"));
     }
 
     public class CountDownTimerClass extends CountDownTimer {

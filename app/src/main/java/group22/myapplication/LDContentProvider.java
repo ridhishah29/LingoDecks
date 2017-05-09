@@ -66,7 +66,7 @@ public class LDContentProvider extends ContentProvider {
                         null, // Values for the "where" clause
                         null, // columns to group by
                         null, // columns to filter by row groups
-                        null // sort order
+                        sortOrder // sort order
                 );
                 Log.i(LOG_TAG, "querying for GERMAN Table");
                 Log.i(LOG_TAG, myCursor.getCount() + "");
@@ -94,7 +94,7 @@ public class LDContentProvider extends ContentProvider {
                         null, // Values for the "where" clause
                         null, // columns to group by
                         null, // columns to filter by row groups
-                        null // sort order
+                        sortOrder // sort order
                 );
                 Log.i(LOG_TAG, "querying for SPANISH Table");
                 Log.i(LOG_TAG, myCursor.getCount() + "");
