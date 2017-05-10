@@ -225,7 +225,6 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-//        adapter.swapCursor(null);
         Log.v("cursorStatus", "resetting loader");
         loader = null;
     }
@@ -244,26 +243,13 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
         outState.putString("TIMER_STATE", setTimerState);
         outState.putBoolean("TIMER_RUNNING", isRunning);
         super.onSaveInstanceState(outState);
-
-//        String answer_one = answer_1.getText().toString();
-//        String answer_two = answer_2.getText().toString();
-//        String answer_three = answer_3.getText().toString();
-//        String answer_four = answer_4.getText().toString();
-
         outState.putString("key", setTimerState);
-//        outState.putString("answer_1", answer_one);
-//        outState.putString("answer_2", answer_two);
-//        outState.putString("answer_3", answer_three);
-//        outState.putString("answer_4", answer_four);
+
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-//        answer_1.setText(savedInstanceState.getString("answer_1"));
-//        answer_2.setText(savedInstanceState.getString("answer_2"));
-//        answer_3.setText(savedInstanceState.getString("answer_3"));
-//        answer_4.setText(savedInstanceState.getString("answer_4"));
     }
 
     public class CountDownTimerClass extends CountDownTimer {
