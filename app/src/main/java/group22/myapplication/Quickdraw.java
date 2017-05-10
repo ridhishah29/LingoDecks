@@ -42,8 +42,6 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
 
         textView = (TextView) findViewById((R.id.timer));
 
-        getLoaderManager().initLoader(GERMAN_LOADER, null, this);
-
         answer_1 = (TextView) findViewById(R.id.answer_1);
         answer_2 = (TextView) findViewById(R.id.answer_2);
         answer_3 = (TextView) findViewById(R.id.answer_3);
@@ -56,6 +54,7 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
             Log.d("InstanceState", "NULL");
         }
         else if (savedInstanceState != null && savedInstanceState.getBoolean("TIMER_RUNNING") == true) {
+            // need to catch if int == "Time's up"
             int getTimerState = Integer.parseInt(savedInstanceState.getString("TIMER_STATE"));
             countdowntimer = new CountDownTimerClass(getTimerState * 1000, 1000);
             countdowntimer.start();
@@ -115,16 +114,28 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
     protected void onResume() {
         super.onResume();
 
-        SharedPreferences myPref = getSharedPreferences("WordData", MODE_PRIVATE);
-        int length = myPref.getInt("data_length", 0);
+        getLoaderManager().initLoader(GERMAN_LOADER, null, this);
 
+        SharedPreferences myPref = getSharedPreferences("WordData", MODE_PRIVATE);
+
+        //initiate answerList array which holds all answers
         answerList.clear();
 
-        for(int i = 0; i < length; i++){
+        //add answers to array saved in sharedpreferences
+        for(int i = 1; i < 5; i++){
             answerList.add(myPref.getString("answer_" + i, "no data"));
-
-            Log.v("Pref", myPref.getString("answer_" + i, "no data"));
+            Log.v("savedAnswers", myPref.getString("answer_" + i, "no data"));
         }
+
+        //reassign question to textview after resuming activity.
+        question_word.setText(myPref.getString("question_word", "no data"));
+
+        //reassign the answers to their textviews after resuming activity.
+        answer_1.setText(answerList.get(0));
+        answer_2.setText(answerList.get(1));
+        answer_3.setText(answerList.get(2));
+        answer_4.setText(answerList.get(3));
+        Log.v("Counter1", answerList.size() + "");
     }
 
     @Override
@@ -135,6 +146,7 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
 
         myEditor.clear();
 
+        myEditor.putString("question_word", question_word.getText().toString());
         myEditor.putString("answer_1", answer_1.getText().toString());
         myEditor.putString("answer_2", answer_2.getText().toString());
         myEditor.putString("answer_3", answer_3.getText().toString());
@@ -155,6 +167,8 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+
+        Log.v("cursorStatus", "Getting cursor loader");
         if(id == 1) {
             String[] columns = {
                     Contract.Lingodecks_Tables._ID,
@@ -169,12 +183,16 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        if(cursor != null && cursor.getCount() > 0) {
-            wordList.clear();
-            answerList.clear();
 
+        Log.v("cursorStatus", "Finished getting loader");
+        Log.v("Counter2", answerList.size() + "");
+        if(cursor != null && cursor.getCount() > 0) {
+//            wordList.clear();
+//            answerList.clear();
+            Log.v("Counter3", answerList.size() + "");
             int count = 0;
-            while (cursor.moveToNext() && count < 4) {
+            //while (cursor.moveToNext() && count < 4) {
+            for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
                 answerList.add(cursor.getString(1));
                 wordList.add(cursor.getString(2));
                 count += 1;
@@ -200,6 +218,7 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
             answer_3.setText(answerList.get(numList.get(2)));
             answer_4.setText(answerList.get(numList.get(3)));
         }else{
+            Log.v("Counter5", answerList.size() + "");
             answer_1.setText("No answer here");
         }
     }
@@ -207,6 +226,7 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 //        adapter.swapCursor(null);
+        Log.v("cursorStatus", "resetting loader");
         loader = null;
     }
     // prevent pause screen open when orientation changes

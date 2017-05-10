@@ -96,7 +96,6 @@
                 android:background="@drawable/answer_border"
                 android:gravity="center"
                 android:padding="5dp"
-                android:text="Answer 1"
                 android:textSize="30dp"
                 android:id="@+id/answer_1"/>
 
@@ -104,13 +103,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-
                 android:layout_weight="1"
                 android:background="@drawable/answer_border"
                 android:gravity="center"
                 android:padding="5dp"
-                android:text="Answer 2"
-                android:textSize="30dp" />
+                android:textSize="30dp"
+                android:id="@+id/answer_2"/>
         </LinearLayout>
 
     <RelativeLayout
