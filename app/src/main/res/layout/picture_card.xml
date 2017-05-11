@@ -28,6 +28,17 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp" />
 
+    <Button
+        android:id="@+id/choosepic_btn"
+        android:layout_width="274dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="15dp"
+        android:background="#f2f2f2"
+        android:text="Choose Photo"
+        android:textColor="#000"
+        android:textSize="20sp" />
+
     <EditText
         android:id="@+id/editText"
         android:layout_width="274dp"
@@ -39,6 +50,8 @@
         android:text="Enter Name"
         android:textAlignment="center"
         android:textSize="20sp" />
+
+
 
     <Button
         android:id="@+id/submitpic_btn"
