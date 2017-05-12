@@ -9,34 +9,34 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Game Mode"
-        android:textSize="40dp"
+        android:textSize="63dp"
         android:textColor="@android:color/black"
         android:id="@+id/textView"
-        android:layout_marginBottom="10dp"/>
+        android:layout_marginBottom="20dp"/>
 
     <Button
-        android:layout_width="300dp"
+        android:layout_width="469dp"
         android:layout_height="wrap_content"
         android:text="Quickdraw"
         android:textAllCaps="false"
         android:textColor="#000"
         android:backgroundTint="#fff"
         android:id="@+id/quick_btn"
-        android:layout_marginBottom="20dp"
-        android:textSize="25dp"
-        android:padding="15dp"
+        android:layout_marginBottom="25dp"
+        android:textSize="39dp"
+        android:padding="20dp"
         android:onClick="setModes" />
     <Button
-        android:layout_width="300dp"
+        android:layout_width="469dp"
         android:layout_height="wrap_content"
         android:text="Flashcards"
         android:textAllCaps="false"
         android:backgroundTint="#000"
         android:textColor="#fff"
         android:id="@+id/flash_btn"
-        android:layout_marginBottom="20dp"
-        android:textSize="25dp"
-        android:padding="15dp"
+        android:layout_marginBottom="25dp"
+        android:textSize="39dp"
+        android:padding="20dp"
         android:onClick="setModes" />
 
     <TextView
@@ -44,45 +44,32 @@
         android:layout_height="wrap_content"
         android:text="Make your own"
         android:textColor="@android:color/black"
-        android:textSize="40dp"
+        android:textSize="63dp"
         android:id="@+id/textView2"
-        android:layout_marginBottom="10dp"/>
+        android:layout_marginBottom="20dp"/>
 
     <Button
         android:id="@+id/create_btn"
-        android:layout_width="300dp"
+        android:layout_width="469dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
         android:backgroundTint="#cffaf5"
-        android:onClick="setModes"
-        android:padding="15dp"
         android:text="Create Cards"
+        android:textSize="39dp"
         android:textAllCaps="false"
-        android:textSize="25dp" />
+        android:layout_marginBottom="25dp"
+        android:padding="20dp"
+        android:onClick="setModes" />
 
     <Button
-        android:layout_width="300dp"
+        android:layout_width="469dp"
         android:layout_height="wrap_content"
         android:text="Custom Cards"
         android:textAllCaps="false"
-        android:textSize="25dp"
+        android:textSize="39dp"
         android:id="@+id/custom_btn"
         android:backgroundTint="#e9e292"
-        android:layout_marginBottom="20dp"
-        android:padding="15dp"
+        android:layout_marginBottom="25dp"
+        android:padding="20dp"
         android:onClick="setModes" />
-
-    <Button
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:text="View Cards"
-        android:textAllCaps="false"
-        android:textSize="25dp"
-        android:id="@+id/view_btn"
-        android:backgroundTint="#79f232"
-        android:layout_marginBottom="20dp"
-        android:padding="15dp"
-        android:onClick="setModes" />
-
 
 </LinearLayout>

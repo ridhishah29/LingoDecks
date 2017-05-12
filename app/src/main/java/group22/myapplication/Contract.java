@@ -11,14 +11,16 @@ public class Contract {
     public static final Uri BASE_CONTENT_URI1 = Uri.parse("content://" + CONTENT_AUTHORITY + "/german");
     public static final Uri BASE_CONTENT_URI2 = Uri.parse("content://" + CONTENT_AUTHORITY + "/spanish");
     public static final Uri BASE_CONTENT_URI3 = Uri.parse("content://" + CONTENT_AUTHORITY + "/score");
+
+    //don't seem to need this. it messes up the query cursor.
     public static final String PATH_LINGODECKS = "lingodecks";
 
     /* Inner class that defines the table contents */
     public static class Lingodecks_Tables implements BaseColumns {
         //Uri
-        public static final Uri CONTENT_URI1 = BASE_CONTENT_URI1.buildUpon().appendPath(PATH_LINGODECKS).build();
-        public static final Uri CONTENT_URI2 = BASE_CONTENT_URI2.buildUpon().appendPath(PATH_LINGODECKS).build();
-        public static final Uri CONTENT_URI3 = BASE_CONTENT_URI3.buildUpon().appendPath(PATH_LINGODECKS).build();
+        public static final Uri CONTENT_URI1 = BASE_CONTENT_URI1.buildUpon().build();
+        public static final Uri CONTENT_URI2 = BASE_CONTENT_URI2.buildUpon().build();
+        public static final Uri CONTENT_URI3 = BASE_CONTENT_URI3.buildUpon().build();
         public static final String CONTENT_TYPE_DIR = "vnd.android.cursor.dir/" + CONTENT_AUTHORITY + "/" + PATH_LINGODECKS;
         public static final String CONTENT_TYPE_ITEM = "vnd.android.cursor.item/" + CONTENT_AUTHORITY + "/" + PATH_LINGODECKS;
 

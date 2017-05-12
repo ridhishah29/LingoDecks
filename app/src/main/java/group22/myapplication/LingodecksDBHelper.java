@@ -70,7 +70,7 @@ class LingodecksDBHelper extends SQLiteOpenHelper {
             db.execSQL("INSERT INTO German (english, german, picture) VALUES (" + "'" + english[i] + "'" + "," + "'" + german[i]+ "'" +", '');");
             db.execSQL("INSERT INTO Spanish (english, spanish, picture) VALUES (" + "'" + english[i] + "'" + "," + "'" + spanish[i]+ "'" +", '');");
         }
-        
+
         Log.i("SQLiteSimpleDemoTEST", "LingodecksDBHelper onCreate()");
     }
 
