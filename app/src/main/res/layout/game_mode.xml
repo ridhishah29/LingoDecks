@@ -72,5 +72,17 @@
         android:padding="15dp"
         android:onClick="setModes" />
 
+    <Button
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:text="View Cards"
+        android:textAllCaps="false"
+        android:textSize="25dp"
+        android:id="@+id/view_btn"
+        android:backgroundTint="#79f232"
+        android:layout_marginBottom="20dp"
+        android:padding="15dp"
+        android:onClick="setModes" />
+
 
 </LinearLayout>

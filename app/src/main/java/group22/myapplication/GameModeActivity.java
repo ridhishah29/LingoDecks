@@ -45,5 +45,10 @@ public class GameModeActivity extends Activity{
             Intent intent = new Intent(this, GameModeActivity.class);
             startActivity(intent);
         }
+        else if(button_clicked.equals("View Cards")){
+            //set language to be spanish
+            Intent intent = new Intent(this, CardList.class);
+            startActivity(intent);
+        }
     }
 }
