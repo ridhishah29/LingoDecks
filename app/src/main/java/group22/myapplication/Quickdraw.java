@@ -32,7 +32,7 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
     ArrayList<String> answerList = new ArrayList<>();
     ArrayList<String> wordList = new ArrayList<>();
 
-    private static final int GERMAN_LOADER = 1;
+    private static final int GERMAN_LOADER = 66;
     boolean isRunning = false;
 
     @Override
@@ -169,14 +169,15 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
         Log.v("cursorStatus", "Getting cursor loader");
-        if(id == 1) {
+        if(id == 66) {
             String[] columns = {
                     Contract.Lingodecks_Tables._ID,
                     Contract.Lingodecks_Tables.COLUMN_GER,
                     Contract.Lingodecks_Tables.COLUMN_GER_ENG
             };
-
-            return new CursorLoader(this, Contract.Lingodecks_Tables.CONTENT_URI1, columns, null, null, "RANDOM()");
+            CursorLoader cl = new CursorLoader(this, Contract.Lingodecks_Tables.CONTENT_URI1, columns, null, null, "RANDOM()");
+            Log.v("FASDASDADS", cl.getId() + "");
+            return cl;
         }
         return null;
     }
@@ -185,14 +186,17 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
 
         Log.v("cursorStatus", "Finished getting loader");
-        Log.v("Counter2", answerList.size() + "");
+
+        if(cursor == null){
+        }
         if(cursor != null && cursor.getCount() > 0) {
-//            wordList.clear();
-//            answerList.clear();
+            wordList.clear();
+            answerList.clear();
             Log.v("Counter3", answerList.size() + "");
             int count = 0;
             //while (cursor.moveToNext() && count < 4) {
             for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+                Log.v("thisIsATest", "trueasd");
                 answerList.add(cursor.getString(1));
                 wordList.add(cursor.getString(2));
                 count += 1;

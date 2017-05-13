@@ -37,11 +37,11 @@ public class GameModeActivity extends Activity{
         }
         else if(button_clicked.equals("Create Cards")){
             //set language to be spanish
-<<<<<<< HEAD
+
             Intent intent = new Intent(this, CreateMenuActivity.class);
-=======
-            Intent intent = new Intent(this, CreateWordCard.class);
->>>>>>> origin/master
+
+            //Intent intent = new Intent(this, CreateWordCard.class);
+
             startActivity(intent);
         }
         else if(button_clicked.equals("Custom Cards")){
@@ -49,10 +49,10 @@ public class GameModeActivity extends Activity{
             Intent intent = new Intent(this, GameModeActivity.class);
             startActivity(intent);
         }
-        else if(button_clicked.equals("View Cards")){
-            //set language to be spanish
-            Intent intent = new Intent(this, CardList.class);
-            startActivity(intent);
-        }
+//        else if(button_clicked.equals("View Cards")){
+//            //set language to be spanish
+//            Intent intent = new Intent(this, CardList.class);
+//            startActivity(intent);
+//        }
     }
 }
