@@ -1,5 +1,6 @@
 package group22.myapplication;
 
+import android.content.Context;
 import android.view.Window;
 import android.widget.Button;
 import android.app.Dialog;
@@ -32,27 +33,36 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
     ArrayList<String> answerList = new ArrayList<>();
     ArrayList<String> wordList = new ArrayList<>();
 
+    private SharedPreferences buttonPref;
+
     private static final int GERMAN_LOADER = 1;
     boolean isRunning = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.quickdraw);
-
         textView = (TextView) findViewById((R.id.timer));
-
         answer_1 = (TextView) findViewById(R.id.answer_1);
         answer_2 = (TextView) findViewById(R.id.answer_2);
         answer_3 = (TextView) findViewById(R.id.answer_3);
         answer_4 = (TextView) findViewById(R.id.answer_4);
         question_word = (TextView) findViewById(R.id.question_word);
 
-        if (savedInstanceState == null) {
+        //if answer button is clicked, it starts a new activity and this saves the time
+        if (getIntent().hasExtra("time")){
+            String data = getIntent().getExtras().getString("time");
+            int getTimerState = Integer.parseInt(data);
+            countdowntimer = new CountDownTimerClass(getTimerState * 1000, 1000);
+            countdowntimer.start();
+        }
+        //if screen has not rotated and therefore not saved a value
+        else if (savedInstanceState == null) {
             countdowntimer = new CountDownTimerClass(61000, 1000);
             countdowntimer.start();
             Log.d("InstanceState", "NULL");
-        }
+        } //if the screen has rotated it will save time value
         else if (savedInstanceState != null && savedInstanceState.getBoolean("TIMER_RUNNING") == true) {
             // need to catch if int == "Time's up"
             int getTimerState = Integer.parseInt(savedInstanceState.getString("TIMER_STATE"));
@@ -63,6 +73,7 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
         else {
             int getTimerState = Integer.parseInt(savedInstanceState.getString("TIMER_STATE"));
             countdowntimer = new CountDownTimerClass(getTimerState * 1000, 1000);
+            countdowntimer.start();
             String re = String.valueOf(getTimerState);
             textView.setText(re);
             Log.d("RunningFalse", "Not null and false");
@@ -72,7 +83,6 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
         final Dialog dialog = new Dialog(Quickdraw.this, android.R.style.Theme_Light);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.pause_dialog);
-
 
         Button pause = (Button) findViewById(R.id.pause_btn);
         pause.setOnClickListener(new View.OnClickListener() {
@@ -103,6 +113,30 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
                 startActivity(new Intent(Quickdraw.this, GameModeActivity.class));
             }
         });
+    }
+
+    public void answerBtn(View v){
+        Intent intent = new Intent(this, Quickdraw.class);
+
+        Log.v("asdasd", textView.getText().toString());
+        intent.putExtra("time", textView.getText().toString());
+
+        switch (v.getId()) {
+            case R.id.answer_1:
+                startActivity(intent);
+                break;
+            case R.id.answer_2:
+                startActivity(intent);
+                break;
+            case R.id.answer_3:
+                startActivity(intent);
+                break;
+            case R.id.answer_4:
+                startActivity(intent);
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
@@ -251,6 +285,7 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
+        savedInstanceState.getString("TIMER_STATE");
     }
 
     public class CountDownTimerClass extends CountDownTimer {
