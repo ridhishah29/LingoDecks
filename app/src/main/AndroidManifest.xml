@@ -44,6 +44,12 @@
             android:process=":remote">
         </receiver>
 
+        <provider
+            android:name="group22.myapplication.LDContentProvider"
+            android:authorities="group22.myapplication"
+            android:enabled="true">
+        </provider>
+
     </application>
 
 </manifest>

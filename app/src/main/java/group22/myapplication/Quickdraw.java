@@ -32,7 +32,7 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
     ArrayList<String> answerList = new ArrayList<>();
     ArrayList<String> wordList = new ArrayList<>();
 
-    private static final int GERMAN_LOADER = 66;
+    private static final int GERMAN_LOADER = 1;
     boolean isRunning = false;
 
     @Override
@@ -135,7 +135,6 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
         answer_2.setText(answerList.get(1));
         answer_3.setText(answerList.get(2));
         answer_4.setText(answerList.get(3));
-        Log.v("Counter1", answerList.size() + "");
     }
 
     @Override
@@ -169,15 +168,13 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
         Log.v("cursorStatus", "Getting cursor loader");
-        if(id == 66) {
+        if(id == 1) {
             String[] columns = {
                     Contract.Lingodecks_Tables._ID,
                     Contract.Lingodecks_Tables.COLUMN_GER,
                     Contract.Lingodecks_Tables.COLUMN_GER_ENG
             };
-            CursorLoader cl = new CursorLoader(this, Contract.Lingodecks_Tables.CONTENT_URI1, columns, null, null, "RANDOM()");
-            Log.v("FASDASDADS", cl.getId() + "");
-            return cl;
+            return new CursorLoader(this, Contract.Lingodecks_Tables.CONTENT_URI1, columns, null, null, "RANDOM()");
         }
         return null;
     }
@@ -194,12 +191,12 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
             answerList.clear();
             Log.v("Counter3", answerList.size() + "");
             int count = 0;
+
             //while (cursor.moveToNext() && count < 4) {
             for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-                Log.v("thisIsATest", "trueasd");
                 answerList.add(cursor.getString(1));
                 wordList.add(cursor.getString(2));
-                count += 1;
+                //count += 1;
             }
 
             //Create array of ints from 0 to 3 for randomisation
