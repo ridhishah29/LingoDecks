@@ -64,7 +64,7 @@ public class CardDisplay extends Activity implements android.app.LoaderManager.L
                     Contract.Lingodecks_Tables._ID,
                     Contract.Lingodecks_Tables.COLUMN_GER,
                     Contract.Lingodecks_Tables.COLUMN_GER_ENG,
-                    COLUMN_GER_PIC
+                    Contract.Lingodecks_Tables.COLUMN_GER_PIC
             };
             return new CursorLoader(this, Contract.Lingodecks_Tables.CONTENT_URI1, columns, null, null, null);
         }

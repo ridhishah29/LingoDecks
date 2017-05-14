@@ -28,10 +28,8 @@ public class CardList extends Activity implements android.app.LoaderManager.Load
     private LingodecksDBHelper DBHelper;
     private SQLiteDatabase db;
     TextView textView;
-    int m = 0;
-
     private static final int GERMAN_LOADER = 1;
-    boolean isRunning = false;
+    ArrayList<String> languageArray = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -40,10 +38,9 @@ public class CardList extends Activity implements android.app.LoaderManager.Load
 
 
         getLoaderManager().initLoader(GERMAN_LOADER, null, this);
-
-        final List<String> datasource = new ArrayList(Arrays.asList(data));
+        //final List<String> datasource = new ArrayList(Arrays.asList(dataArray));
         ArrayAdapter<String> adapter = new ArrayAdapter<String>
-                (getApplicationContext(),R.layout.card_list,R.id.card_list_textview,datasource);
+                (getApplicationContext(),R.layout.card_list,R.id.card_list_textview,languageArray);
 
         ListView lv = (ListView) findViewById(R.id.card_list_view);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener(){
@@ -55,12 +52,7 @@ public class CardList extends Activity implements android.app.LoaderManager.Load
             }
 
         });
-
-
         lv.setAdapter(adapter);
-
-
-
     }
 
     @Override
@@ -105,12 +97,10 @@ public class CardList extends Activity implements android.app.LoaderManager.Load
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         if (cursor != null && cursor.getCount() > 0) {
-            String[] data = {};
             int m = 0;
-            StringBuilder stringBuilderQueryResult = new StringBuilder("");
-            while (cursor.moveToNext() && m < Contract.Lingodecks_Tables._ID.length()) {
-                stringBuilderQueryResult.append(cursor.getString(m));
-                data[m] = stringBuilderQueryResult.toString();
+            while (cursor.moveToNext() && m < cursor.getCount()) {
+                languageArray.add(cursor.getString(2) + " - " + cursor.getString(1));
+                Log.v("HERE", cursor.getCount() + "");
                 m++;
             }
         }
