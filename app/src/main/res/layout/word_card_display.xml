@@ -41,17 +41,44 @@
         android:layout_marginTop="70dp"
         android:textSize="40sp"
         android:textAlignment="center"/>
+    <LinearLayout
+        android:id="@+id/btnLL"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="75dp"
+        android:layout_alignParentBottom="true">
+        <Button
+            android:id="@+id/editcard_btn"
+            android:layout_width="175dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="25dp"
+            android:text="Edit"
+            android:background="#e0ebeb"
+            android:textSize="25sp"
+            android:textColor="#000"/>
+
+        <Button
+            android:id="@+id/deletecard_button"
+            android:layout_width="175dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="10dp"
+            android:text="Delete"
+            android:background="#ff3333"
+            android:textSize="25sp"
+            android:textColor="#fff"/>
+    </LinearLayout>
 
     <Button
         android:id="@+id/returnBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="152dp"
+        android:layout_marginTop="10dp"
         android:padding="10dp"
         android:text="Return to index"
         android:textSize="30sp"
         android:background="#2BCD32"
         android:textColor="#fff"/>
+
 
 </LinearLayout>
