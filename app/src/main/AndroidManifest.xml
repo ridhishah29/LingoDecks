@@ -29,6 +29,7 @@
         <activity android:name=".CreateWordActivity" />
         <activity android:name=".CardList" />
         <activity android:name=".CardDisplay" />
+        <activity android:name=".WordCardDisplay" />
         <activity android:name=".FlashcardActivity" />
         <activity
             android:name=".Quickdraw"

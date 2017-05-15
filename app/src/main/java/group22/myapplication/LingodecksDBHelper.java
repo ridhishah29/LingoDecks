@@ -2,6 +2,7 @@ package group22.myapplication;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.content.ContentValues;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
@@ -93,5 +94,11 @@ class LingodecksDBHelper extends SQLiteOpenHelper {
     public void clearScoreTable(String table_name){
         myDB.execSQL("DELETE FROM " + Contract.Lingodecks_Tables.TABLE_SCORE);
     }
+
+    /*
+    public boolean EditCard(String CardID, String English, String Translation) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+    }*/
 
 }
