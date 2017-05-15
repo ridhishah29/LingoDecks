@@ -20,7 +20,11 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Random;
 
 public class Quickdraw extends Activity implements android.app.LoaderManager.LoaderCallbacks<Cursor> {
@@ -30,8 +34,13 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
     TextView textView, answer_1, answer_2, answer_3, answer_4, question_word;
     CountDownTimer countdowntimer;
     SimpleCursorAdapter adapter;
-    ArrayList<String> answerList = new ArrayList<>();
-    ArrayList<String> wordList = new ArrayList<>();
+    Map<Integer, String> answerList = new LinkedHashMap<Integer, String>();
+    Map<Integer, String> wordList = new LinkedHashMap<Integer, String>();
+
+    //created array for linkedHashMap to access indexing - for randomisation.
+    ArrayList<String> answerListArray = new ArrayList<String>();
+    ArrayList<String> wordListArray = new ArrayList<String>();
+
 
     private SharedPreferences buttonPref;
 
@@ -56,24 +65,22 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
             int getTimerState = Integer.parseInt(data);
             countdowntimer = new CountDownTimerClass(getTimerState * 1000, 1000);
             countdowntimer.start();
-        }
-        //if screen has not rotated and therefore not saved a value
+        } //if screen has not rotated and therefore not saved a value
         else if (savedInstanceState == null) {
             countdowntimer = new CountDownTimerClass(61000, 1000);
             countdowntimer.start();
             Log.d("InstanceState", "NULL");
-        } //if the screen has rotated it will save time value
+        } //if the screen has been rotated and the timer is still running i.e. not in pause screen
         else if (savedInstanceState != null && savedInstanceState.getBoolean("TIMER_RUNNING") == true) {
             // need to catch if int == "Time's up"
             int getTimerState = Integer.parseInt(savedInstanceState.getString("TIMER_STATE"));
             countdowntimer = new CountDownTimerClass(getTimerState * 1000, 1000);
             countdowntimer.start();
             Log.d("RunningTrue", "Not null and true");
-        }
+        }//if pause screen is active
         else {
             int getTimerState = Integer.parseInt(savedInstanceState.getString("TIMER_STATE"));
             countdowntimer = new CountDownTimerClass(getTimerState * 1000, 1000);
-            countdowntimer.start();
             String re = String.valueOf(getTimerState);
             textView.setText(re);
             Log.d("RunningFalse", "Not null and false");
@@ -115,14 +122,20 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        //answer buttons create multiple activities - back button will go back each activity.
+        Intent setIntent = new Intent(this, MainActivity.class);
+        startActivity(setIntent);
+    }
+
     public void answerBtn(View v){
         Intent intent = new Intent(this, Quickdraw.class);
-
-        Log.v("asdasd", textView.getText().toString());
         intent.putExtra("time", textView.getText().toString());
 
         switch (v.getId()) {
             case R.id.answer_1:
+
                 startActivity(intent);
                 break;
             case R.id.answer_2:
@@ -153,11 +166,11 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
         SharedPreferences myPref = getSharedPreferences("WordData", MODE_PRIVATE);
 
         //initiate answerList array which holds all answers
-        answerList.clear();
+        answerListArray.clear();
 
         //add answers to array saved in sharedpreferences
         for(int i = 1; i < 5; i++){
-            answerList.add(myPref.getString("answer_" + i, "no data"));
+            answerListArray.add(myPref.getString("answer_" + i, "no data"));
             Log.v("savedAnswers", myPref.getString("answer_" + i, "no data"));
         }
 
@@ -218,19 +231,14 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
 
         Log.v("cursorStatus", "Finished getting loader");
 
-        if(cursor == null){
-        }
         if(cursor != null && cursor.getCount() > 0) {
             wordList.clear();
             answerList.clear();
             Log.v("Counter3", answerList.size() + "");
-            int count = 0;
 
-            //while (cursor.moveToNext() && count < 4) {
             for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-                answerList.add(cursor.getString(1));
-                wordList.add(cursor.getString(2));
-                //count += 1;
+                answerList.put(cursor.getInt(0), cursor.getString(1));
+                wordList.put(cursor.getInt(0), cursor.getString(2));
             }
 
             //Create array of ints from 0 to 3 for randomisation
@@ -245,16 +253,20 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
             Random rand = new Random();
             int randInt = rand.nextInt(4);
 
-
+            answerListArray = new ArrayList<String>(answerList.values());
+            wordListArray = new ArrayList<String>(wordList.values());
             //assign positions for answers and choose a question from list
-            question_word.setText(wordList.get(numList.get(randInt)));
-            answer_1.setText(answerList.get(numList.get(0)));
-            answer_2.setText(answerList.get(numList.get(1)));
-            answer_3.setText(answerList.get(numList.get(2)));
-            answer_4.setText(answerList.get(numList.get(3)));
+            question_word.setText(wordListArray.get(numList.get(randInt)));
+            answer_1.setText(answerListArray.get(numList.get(0)).toString());
+            answer_2.setText(answerListArray.get(numList.get(1)).toString());
+            answer_3.setText(answerListArray.get(numList.get(2)).toString());
+            answer_4.setText(answerListArray.get(numList.get(3)).toString());
         }else{
-            Log.v("Counter5", answerList.size() + "");
+
             answer_1.setText("No answer here");
+            answer_2.setText("No answer here");
+            answer_3.setText("No answer here");
+            answer_4.setText("No answer here");
         }
     }
 
