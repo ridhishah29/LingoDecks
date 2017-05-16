@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 class LingodecksDBHelper extends SQLiteOpenHelper {
 
-    public static final int DB_VERSION = 2;
+    public static final int DB_VERSION = 3;
     public static final String DB_NAME="lingodecks.db";
 
     public SQLiteDatabase myDB;
@@ -44,7 +44,7 @@ class LingodecksDBHelper extends SQLiteOpenHelper {
                 Contract.Lingodecks_Tables.COLUMN_ESP +
                 " TEXT NOT NULL," +
                 Contract.Lingodecks_Tables.COLUMN_ESP_PIC +
-                " TEXT NOT NULL );";
+                " TEXT );";
 
         String ScoreQuery = "CREATE TABLE IF NOT EXISTS " +
                 Contract.Lingodecks_Tables.TABLE_SCORE +

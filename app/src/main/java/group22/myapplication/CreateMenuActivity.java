@@ -62,7 +62,7 @@ public class CreateMenuActivity extends Activity {
             startActivity(intent);
         } else if (button_clicked.equals("Word Card")) {
 
-            Intent intent = new Intent(this, CreateWordActivity.class);
+            Intent intent = new Intent(this, CreateWordCard.class);
             startActivity(intent);
         }
 
