@@ -39,9 +39,6 @@ public class LDContentProvider extends ContentProvider {
 
     }
 
-    public LDContentProvider() {
-    }
-
 
     @Override
     public boolean onCreate() {
@@ -62,8 +59,8 @@ public class LDContentProvider extends ContentProvider {
                 myCursor = db.query(
                         Contract.Lingodecks_Tables.TABLE_GERMAN, //Table to Query
                         projection,//Columns
-                        null, // Columns for the "where" clause
-                        null, // Values for the "where" clause
+                        selection, // Columns for the "where" clause
+                        selectionArgs, // Values for the "where" clause
                         null, // columns to group by
                         null, // columns to filter by row groups
                         sortOrder // sort order
@@ -90,8 +87,8 @@ public class LDContentProvider extends ContentProvider {
                 myCursor = db.query(
                         Contract.Lingodecks_Tables.TABLE_SPANISH, //Table to Query
                         projection,//Columns
-                        null, // Columns for the "where" clause
-                        null, // Values for the "where" clause
+                        selection, // Columns for the "where" clause
+                        selectionArgs, // Values for the "where" clause
                         null, // columns to group by
                         null, // columns to filter by row groups
                         sortOrder // sort order
@@ -118,11 +115,11 @@ public class LDContentProvider extends ContentProvider {
                 myCursor = db.query(
                         Contract.Lingodecks_Tables.TABLE_SCORE, //Table to Query
                         projection,//Columns
-                        null, // Columns for the "where" clause
-                        null, // Values for the "where" clause
+                        selection, // Columns for the "where" clause
+                        selectionArgs, // Values for the "where" clause
                         null, // columns to group by
                         null, // columns to filter by row groups
-                        null // sort order
+                        sortOrder // sort order
                 );
                 Log.i(LOG_TAG, "querying for SCORE Table");
                 Log.i(LOG_TAG, myCursor.getCount() + "");

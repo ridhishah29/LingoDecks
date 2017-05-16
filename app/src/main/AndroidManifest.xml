@@ -5,7 +5,9 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -22,6 +24,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".GameModeActivity" />
+        <activity android:name=".CreateMenuActivity" />
+        <activity android:name=".CreatePicActivity" />
+        <activity android:name=".CreateWordActivity" />
+        <activity android:name=".CardList" />
+        <activity android:name=".CardDisplay" />
+        <activity android:name=".WordCardDisplay" />
         <activity android:name=".FlashcardActivity" />
         <activity
             android:name=".Quickdraw"
@@ -32,15 +40,11 @@
                 android:value="group22.myapplication.GameModeActivity" />
         </activity>
 
-        <activity android:name=".CreateWordCard"
-            android:label="@string/title_create_word"/>
-
         <receiver
             android:name=".NotificationReceiver"
-            android:enabled="true"
             android:exported="true"
+            android:enabled="true"
             android:process=":remote">
-
         </receiver>
 
         <provider

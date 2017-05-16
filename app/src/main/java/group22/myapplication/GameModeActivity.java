@@ -16,7 +16,7 @@ public class GameModeActivity extends Activity{
         setContentView(R.layout.game_mode);
 
 
-        // this can be added whereever the api is needed.
+        // this can be added wherever the api is needed.
         SharedPreferences langPref = getSharedPreferences("setLanguage", MODE_PRIVATE);
         String languageSet = langPref.getString("language", "");
         Log.v("language chosen", languageSet);
@@ -37,12 +37,24 @@ public class GameModeActivity extends Activity{
         }
         else if(button_clicked.equals("Create Cards")){
             //set language to be spanish
-            Intent intent = new Intent(this, CreateWordCard.class);
+
+            Intent intent = new Intent(this, CreateMenuActivity.class);
+
+            //Intent intent = new Intent(this, CreateWordCard.class);
+
             startActivity(intent);
         }
         else if(button_clicked.equals("Custom Cards")){
             //set language to be spanish
             Intent intent = new Intent(this, GameModeActivity.class);
+            startActivity(intent);
+        }
+
+        //THIS IS BROKEN - NEED A FIX
+
+        else if(button_clicked.equals("View Cards")){
+            //set language to be spanish
+            Intent intent = new Intent(this, CardList.class);
             startActivity(intent);
         }
     }
