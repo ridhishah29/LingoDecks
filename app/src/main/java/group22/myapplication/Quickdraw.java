@@ -89,7 +89,7 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
             public void onClick(View view) {
                 dialog.dismiss();
                 int getTimerState = Integer.parseInt(textView.getText().toString());
-                countdowntimer = new CountDownTimerClass(120 * 1000, 1000);
+                countdowntimer = new CountDownTimerClass(getTimerState * 1000, 1000);
                 countdowntimer.start();
                 isRunning = true;
                 Log.d("ResumeClick", Boolean.toString(isRunning));
@@ -209,7 +209,6 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
             //Create a random number for the question
             Random rand = new Random();
             int randInt = rand.nextInt(4);
-
 
             //assign positions for answers and choose a question from list
             question_word.setText(wordList.get(numList.get(randInt)));

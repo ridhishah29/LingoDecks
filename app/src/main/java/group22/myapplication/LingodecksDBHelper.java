@@ -32,7 +32,7 @@ class LingodecksDBHelper extends SQLiteOpenHelper {
                 Contract.Lingodecks_Tables.COLUMN_GER +
                 " TEXT NOT NULL," +
                 Contract.Lingodecks_Tables.COLUMN_GER_PIC +
-                " TEXT NOT NULL );";
+                " TEXT );";
 
         String SpanishQuery = "CREATE TABLE IF NOT EXISTS " +
                 Contract.Lingodecks_Tables.TABLE_SPANISH +
