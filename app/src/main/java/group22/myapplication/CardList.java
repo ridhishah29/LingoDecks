@@ -46,8 +46,10 @@ public class CardList extends Activity implements android.app.LoaderManager.Load
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id){
-                Intent intent = new Intent(CardList.this, CardDisplay.class);
-                /*intent.putExtra(id, Contract.Lingodecks_Tables._ID.indexOf(data[m]));*/ // get id of clicked item
+                Intent intent = new Intent(CardList.this, WordCardDisplay.class);
+                TextView tv = (TextView) view;
+                intent.putExtra("Card",tv.getText().toString());
+                //start new activity using the intent
                 startActivity(intent);
             }
 
@@ -96,10 +98,10 @@ public class CardList extends Activity implements android.app.LoaderManager.Load
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+        int m = 0;
         if (cursor != null && cursor.getCount() > 0) {
-            int m = 0;
             while (cursor.moveToNext() && m < cursor.getCount()) {
-                languageArray.add(cursor.getString(2) + " - " + cursor.getString(1));
+                languageArray.add(cursor.getString(0) + " - " + cursor.getString(2) + " - " + cursor.getString(1));
                 Log.v("HERE", cursor.getCount() + "");
                 m++;
             }

@@ -114,7 +114,7 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
             public void onClick(View view) {
                 dialog.dismiss();
                 int getTimerState = Integer.parseInt(textView.getText().toString());
-                countdowntimer = new CountDownTimerClass(120 * 1000, 1000);
+                countdowntimer = new CountDownTimerClass(getTimerState * 1000, 1000);
                 countdowntimer.start();
                 isRunning = true;
                 Log.d("ResumeClick", Boolean.toString(isRunning));
@@ -264,6 +264,7 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
 
             answerListArray = new ArrayList<String>(answerList.keySet());
             wordListArray = new ArrayList<String>(wordList.keySet());
+
             //assign positions for answers and choose a question from list
             question_word.setText(wordListArray.get(numList.get(randInt)));
             answer_1.setText(answerListArray.get(numList.get(0)).toString());

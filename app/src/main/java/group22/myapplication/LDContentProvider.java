@@ -39,9 +39,6 @@ public class LDContentProvider extends ContentProvider {
 
     }
 
-    public LDContentProvider() {
-    }
-
 
     @Override
     public boolean onCreate() {
