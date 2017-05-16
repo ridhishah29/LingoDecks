@@ -34,15 +34,16 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
     TextView textView, answer_1, answer_2, answer_3, answer_4, question_word;
     CountDownTimer countdowntimer;
     SimpleCursorAdapter adapter;
-    Map<Integer, String> answerList = new LinkedHashMap<Integer, String>();
-    Map<Integer, String> wordList = new LinkedHashMap<Integer, String>();
+    Map<String, Integer> answerList = new LinkedHashMap<String, Integer>();
+    Map<String, Integer> wordList = new LinkedHashMap<String, Integer>();
 
     //created array for linkedHashMap to access indexing - for randomisation.
     ArrayList<String> answerListArray = new ArrayList<String>();
     ArrayList<String> wordListArray = new ArrayList<String>();
 
+    public Integer score = 0;
 
-    private SharedPreferences buttonPref;
+    private SharedPreferences myPref;
 
     private static final int GERMAN_LOADER = 1;
     boolean isRunning = false;
@@ -58,6 +59,13 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
         answer_3 = (TextView) findViewById(R.id.answer_3);
         answer_4 = (TextView) findViewById(R.id.answer_4);
         question_word = (TextView) findViewById(R.id.question_word);
+
+
+        //grab score from previous question activity - only grabs if the quickdraw activity is not the first activity
+        if(getIntent().hasExtra("score")){
+            score = getIntent().getExtras().getInt("score");
+            Log.v("ScoreForU", score.toString());
+        }
 
         //if answer button is clicked, it starts a new activity and this saves the time
         if (getIntent().hasExtra("time")){
@@ -125,7 +133,10 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
     @Override
     public void onBackPressed() {
         //answer buttons create multiple activities - back button will go back each activity.
-        Intent setIntent = new Intent(this, MainActivity.class);
+        Intent setIntent = new Intent(this, GameModeActivity.class);
+
+        //reset score
+        score = 0;
         startActivity(setIntent);
     }
 
@@ -133,23 +144,18 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
         Intent intent = new Intent(this, Quickdraw.class);
         intent.putExtra("time", textView.getText().toString());
 
-        switch (v.getId()) {
-            case R.id.answer_1:
+        TextView buttonClicked = (TextView) findViewById(v.getId());
 
-                startActivity(intent);
-                break;
-            case R.id.answer_2:
-                startActivity(intent);
-                break;
-            case R.id.answer_3:
-                startActivity(intent);
-                break;
-            case R.id.answer_4:
-                startActivity(intent);
-                break;
-            default:
-                break;
+        if(answerList.get(buttonClicked.getText()) == (wordList.get(question_word.getText()))) {
+            Log.v("QuestionStatus", "Correct answer");
+            score += 1;
         }
+        else{
+            Log.v("QuestionStatus", "Wrong answer");
+        }
+
+        intent.putExtra("score", score);
+        startActivity(intent);
     }
 
     @Override
@@ -163,31 +169,34 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
 
         getLoaderManager().initLoader(GERMAN_LOADER, null, this);
 
-        SharedPreferences myPref = getSharedPreferences("WordData", MODE_PRIVATE);
+        myPref = getSharedPreferences("quickDraw", MODE_PRIVATE);
 
         //initiate answerList array which holds all answers
+        wordListArray.clear();
         answerListArray.clear();
 
         //add answers to array saved in sharedpreferences
         for(int i = 1; i < 5; i++){
             answerListArray.add(myPref.getString("answer_" + i, "no data"));
-            Log.v("savedAnswers", myPref.getString("answer_" + i, "no data"));
+            Log.v("savedanswer", (myPref.getString("answer_" + i, "no data")));
         }
 
         //reassign question to textview after resuming activity.
         question_word.setText(myPref.getString("question_word", "no data"));
 
         //reassign the answers to their textviews after resuming activity.
-        answer_1.setText(answerList.get(0));
-        answer_2.setText(answerList.get(1));
-        answer_3.setText(answerList.get(2));
-        answer_4.setText(answerList.get(3));
+        answer_1.setText(answerListArray.get(0));
+        answer_2.setText(answerListArray.get(1));
+        answer_3.setText(answerListArray.get(2));
+        answer_4.setText(answerListArray.get(3));
+        Log.v("arrayListed", answerListArray.toString());
+        score = myPref.getInt("score", 0);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        SharedPreferences myPref = getSharedPreferences("WordData", MODE_PRIVATE);
+        myPref = getSharedPreferences("quickDraw", MODE_PRIVATE);
         SharedPreferences.Editor myEditor = myPref.edit();
 
         myEditor.clear();
@@ -197,6 +206,7 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
         myEditor.putString("answer_2", answer_2.getText().toString());
         myEditor.putString("answer_3", answer_3.getText().toString());
         myEditor.putString("answer_4", answer_4.getText().toString());
+        myEditor.putInt("score", score);
 
         myEditor.commit();
     }
@@ -234,11 +244,10 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
         if(cursor != null && cursor.getCount() > 0) {
             wordList.clear();
             answerList.clear();
-            Log.v("Counter3", answerList.size() + "");
 
             for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-                answerList.put(cursor.getInt(0), cursor.getString(1));
-                wordList.put(cursor.getInt(0), cursor.getString(2));
+                answerList.put(cursor.getString(1), cursor.getInt(0));
+                wordList.put(cursor.getString(2), cursor.getInt(0));
             }
 
             //Create array of ints from 0 to 3 for randomisation
@@ -253,8 +262,8 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
             Random rand = new Random();
             int randInt = rand.nextInt(4);
 
-            answerListArray = new ArrayList<String>(answerList.values());
-            wordListArray = new ArrayList<String>(wordList.values());
+            answerListArray = new ArrayList<String>(answerList.keySet());
+            wordListArray = new ArrayList<String>(wordList.keySet());
             //assign positions for answers and choose a question from list
             question_word.setText(wordListArray.get(numList.get(randInt)));
             answer_1.setText(answerListArray.get(numList.get(0)).toString());
@@ -262,7 +271,7 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
             answer_3.setText(answerListArray.get(numList.get(2)).toString());
             answer_4.setText(answerListArray.get(numList.get(3)).toString());
         }else{
-
+            question_word.setText("No question here");
             answer_1.setText("No answer here");
             answer_2.setText("No answer here");
             answer_3.setText("No answer here");
@@ -315,7 +324,13 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
 
         @Override
         public void onFinish() {
-            textView.setText("Time's up");
+            textView.setText("0");
+
+            //call results page with score
+            Intent instantIntent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(instantIntent);
+            //reset score
+            score = 0;
 
         }
     }
