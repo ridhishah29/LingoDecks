@@ -1,16 +1,20 @@
 package group22.myapplication;
 
 import android.app.Activity;
+
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
+
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
+
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -18,6 +22,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,10 +42,16 @@ public class WordCardDisplay extends Activity{
     public SQLiteDatabase myDB;
     private TextView textView9, textView10;
     private EditText EditTextView;
-    private Button EditBtn, SubmitBtn;
+    private Button EditBtn, DeleteBtn, SubmitBtn;
+    LingodecksDBHelper DBHelper;
 
     String translatedWord = "";
     String languageSet = "";
+    public static final String LOG_TAG = "WordCardDisplay";
+    Context toast_context = this;
+    CharSequence deleted_text = "Card was successfully deleted";
+    int duration = Toast.LENGTH_SHORT;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +59,9 @@ public class WordCardDisplay extends Activity{
         languageSet = langPref.getString("language", "");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.word_card_display);
+
+        DBHelper = new LingodecksDBHelper(this,LingodecksDBHelper.DB_NAME,null,LingodecksDBHelper.DB_VERSION);
+        myDB = DBHelper.getWritableDatabase();
 
         //on the receiving side
         //get the intent that started this activity
@@ -59,6 +74,7 @@ public class WordCardDisplay extends Activity{
         String[] details = message.split(" - ");
 
         //declare variables for array
+        final String CardID = details[0];
         final String Translation = details[1];
         final String English = details[2];
 
@@ -67,6 +83,22 @@ public class WordCardDisplay extends Activity{
         textView9.setText(Translation);
         textView10 = (TextView)findViewById(R.id.textView10);
         textView10.setText(English);
+
+        //delete the card
+        DeleteBtn = (Button) findViewById(R.id.deletecard_button);
+        final Toast deleteToast = Toast.makeText(toast_context, deleted_text, duration);
+        final String DeleteQuery = "DELETE FROM " + Contract.Lingodecks_Tables.TABLE_GERMAN + " WHERE "
+                + Contract.Lingodecks_Tables._ID + " = " + CardID;
+        Log.i(LOG_TAG, DeleteQuery);
+        DeleteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                myDB.execSQL(DeleteQuery);
+                deleteToast.show();
+                Intent intent = new Intent(WordCardDisplay.this, CardList.class);
+                startActivity(intent);
+            }
+        });
 
         //
         EditBtn = (Button)findViewById(R.id.editcard_btn) ;
@@ -84,7 +116,6 @@ public class WordCardDisplay extends Activity{
 
 
     }
-
 
     public void setType(View view) {
 
@@ -150,6 +181,38 @@ public class WordCardDisplay extends Activity{
             values = new ContentValues();
             values.put(Contract.Lingodecks_Tables.COLUMN_GER_ENG, user_input);
             values.put(Contract.Lingodecks_Tables.COLUMN_GER, translatedWord);
+
+            //Content resolver to be passed to LDContentProvider
+            getContentResolver().update(uri, values, CardID, null);
+        }else if (languageSet == "en-es") {
+
+            //on the receiving side
+            //get the intent that started this activity
+            Intent intent = getIntent();
+
+            //grab the data from CardList
+            String message = intent.getStringExtra("Card");
+
+            //split data into arrays
+            String[] details = message.split(" - ");
+
+            //declare variables for array
+            final String CardID = details[0];
+
+            //Convert from string to long
+            long ID = Long.parseLong(CardID);
+
+            //accessing Content_Uri
+            Contract.Lingodecks_Tables ContentURI = new Contract.Lingodecks_Tables();
+            Uri CONTENT_URI2 = ContentURI.CONTENT_URI2;
+
+            //declaring a uri
+            final Uri uri = ContentUris.withAppendedId(CONTENT_URI2, ID);
+
+            //Defining content values to update database
+            values = new ContentValues();
+            values.put(Contract.Lingodecks_Tables.COLUMN_ESP_ENG, user_input);
+            values.put(Contract.Lingodecks_Tables.COLUMN_ESP, translatedWord);
 
             //Content resolver to be passed to LDContentProvider
             getContentResolver().update(uri, values, CardID, null);

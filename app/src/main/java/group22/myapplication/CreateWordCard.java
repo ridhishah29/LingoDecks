@@ -65,12 +65,7 @@ public class CreateWordCard extends Activity {
                 }
             }
         });
-//
-//        Intent sendIntent = new Intent();
-//        sendIntent.setAction(Intent.ACTION_SEND);
-//        sendIntent.putExtra(Intent.EXTRA_TEXT, "I got 10000 in Quickdraw!");
-//        sendIntent.setType("text/plain");
-//        startActivity(sendIntent);
+
     }
 
     private void insertDB() {
