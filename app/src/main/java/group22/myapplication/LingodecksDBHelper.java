@@ -95,10 +95,4 @@ class LingodecksDBHelper extends SQLiteOpenHelper {
         myDB.execSQL("DELETE FROM " + Contract.Lingodecks_Tables.TABLE_SCORE);
     }
 
-    /*
-    public boolean EditCard(String CardID, String English, String Translation) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-    }*/
-
 }
