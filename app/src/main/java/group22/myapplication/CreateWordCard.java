@@ -46,8 +46,8 @@ public class CreateWordCard extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.word_card);
 
-        Button btnResume = (Button) findViewById(R.id.submitword_btn);
-        btnResume.setOnClickListener(new View.OnClickListener() {
+        Button btnSubmit = (Button) findViewById(R.id.submitword_btn);
+        btnSubmit.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 editText = (EditText) findViewById(R.id.wordcard_txt);
                 String user_input = editText.getText().toString();
@@ -55,7 +55,6 @@ public class CreateWordCard extends Activity {
                 if(TextUtils.isEmpty(user_input)) {
                     textView = (TextView) findViewById(R.id.testview);
                     textView.setText("Please enter a word");
-                    Log.v("hi", user_input);
                 } else {
                     translateParams params = new translateParams(user_input, languageSet);
                     FetchTranslation myTask = new FetchTranslation();
@@ -79,32 +78,17 @@ public class CreateWordCard extends Activity {
         String user_input = editText.getText().toString();
 
         if(languageSet == "en-de") {
-
             values = new ContentValues();
             values.put(Contract.Lingodecks_Tables.COLUMN_GER_ENG, user_input);
             values.put(Contract.Lingodecks_Tables.COLUMN_GER, translatedWord);
             getContentResolver().insert(Contract.Lingodecks_Tables.CONTENT_URI1, values);
-
-            Cursor c = getContentResolver().query(Contract.Lingodecks_Tables.CONTENT_URI1, null, Contract.Lingodecks_Tables.COLUMN_GER  + " = " + DatabaseUtils.sqlEscapeString("rainbowflies"), null, null);
-            if(c.getCount() == 0) {
-                Log.v("Exists", "False");
-                Log.d("insertText", "5");
-
-            }
-            else {
-                Log.v("Exists", "True");
-                Log.d("insertText", "6");
-            }
-
         }
-//        else if(languageSet == "en-es") {
-//            values = new ContentValues();
-//            values.put("COLUMN_ESP_ENG", user_input);
-//            values = new ContentValues();
-//            values.put("COLUMN_ESP", translatedWord);
-//            getContentResolver().insert(2, values);
-
-//        }
+        else if(languageSet == "en-es") {
+            values = new ContentValues();
+            values.put(Contract.Lingodecks_Tables.COLUMN_ESP_ENG, user_input);
+            values.put(Contract.Lingodecks_Tables.COLUMN_ESP, translatedWord);
+            getContentResolver().insert(Contract.Lingodecks_Tables.CONTENT_URI1, values);
+        }
     }
 
     private static class translateParams {

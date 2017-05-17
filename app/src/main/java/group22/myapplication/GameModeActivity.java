@@ -39,9 +39,6 @@ public class GameModeActivity extends Activity{
             //set language to be spanish
 
             Intent intent = new Intent(this, CreateMenuActivity.class);
-
-            //Intent intent = new Intent(this, CreateWordCard.class);
-
             startActivity(intent);
         }
         else if(button_clicked.equals("Custom Cards")){
