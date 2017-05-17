@@ -1,28 +1,44 @@
 package group22.myapplication;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.util.Log;
+import android.widget.Toast;
+
 
 public class WordCardDisplay extends Activity{
 
     private TextView textView9, textView10;
     private EditText EditTextView;
     private Button EditBtn;
+    private Button DeleteBtn;
     private static final int GERMAN_LOADER = 1;
+    LingodecksDBHelper DBHelper;
+    public SQLiteDatabase myDB;
+    public static final String LOG_TAG = "WordCardDisplay";
+    Context toast_context = this;
+    CharSequence deleted_text = "Card was successfully deleted";
+    int duration = Toast.LENGTH_SHORT;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.word_card_display);
+
+        DBHelper = new LingodecksDBHelper(this,LingodecksDBHelper.DB_NAME,null,LingodecksDBHelper.DB_VERSION);
+        myDB = DBHelper.getWritableDatabase();
 
         //on the receiving side
         //get the intent that started this activity
@@ -45,6 +61,22 @@ public class WordCardDisplay extends Activity{
         textView10 = (TextView)findViewById(R.id.textView10);
         textView10.setText(English);
 
+        //delete the card
+        DeleteBtn = (Button) findViewById(R.id.deletecard_button);
+        final Toast deleteToast = Toast.makeText(toast_context, deleted_text, duration);
+        final String DeleteQuery = "DELETE FROM " + Contract.Lingodecks_Tables.TABLE_GERMAN + " WHERE "
+                + Contract.Lingodecks_Tables._ID + " = " + CardID;
+        Log.i(LOG_TAG, DeleteQuery);
+        DeleteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                myDB.execSQL(DeleteQuery);
+                deleteToast.show();
+                Intent intent = new Intent(WordCardDisplay.this, CardList.class);
+                startActivity(intent);
+            }
+        });
+
         //
         EditBtn = (Button)findViewById(R.id.editcard_btn) ;
         EditTextView = (EditText)findViewById(R.id.EditWordtv);
@@ -58,6 +90,31 @@ public class WordCardDisplay extends Activity{
                 SubmitBtn.setText("Submit");
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     public void setType(View view) {
