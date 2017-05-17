@@ -42,6 +42,7 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
     ArrayList<String> wordListArray = new ArrayList<String>();
 
     public Integer score = 0;
+    public Integer totalScore = 0;
 
     private SharedPreferences myPref;
 
@@ -64,7 +65,11 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
         //grab score from previous question activity - only grabs if the quickdraw activity is not the first activity
         if(getIntent().hasExtra("score")){
             score = getIntent().getExtras().getInt("score");
-            Log.v("ScoreForU", score.toString());
+            totalScore = getIntent().getExtras().getInt("totalScore");
+        }
+        else{
+            score = 0;
+            totalScore = 0;
         }
 
         //if answer button is clicked, it starts a new activity and this saves the time
@@ -137,6 +142,7 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
 
         //reset score
         score = 0;
+        totalScore = 0;
         startActivity(setIntent);
     }
 
@@ -149,12 +155,15 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
         if(answerList.get(buttonClicked.getText()) == (wordList.get(question_word.getText()))) {
             Log.v("QuestionStatus", "Correct answer");
             score += 1;
+            totalScore += 1;
         }
         else{
             Log.v("QuestionStatus", "Wrong answer");
+            totalScore += 1;
         }
 
         intent.putExtra("score", score);
+        intent.putExtra("totalScore", totalScore);
         startActivity(intent);
     }
 
@@ -191,6 +200,7 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
         answer_4.setText(answerListArray.get(3));
         Log.v("arrayListed", answerListArray.toString());
         score = myPref.getInt("score", 0);
+        totalScore = myPref.getInt("totalScore", 0);
     }
 
     @Override
@@ -207,6 +217,7 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
         myEditor.putString("answer_3", answer_3.getText().toString());
         myEditor.putString("answer_4", answer_4.getText().toString());
         myEditor.putInt("score", score);
+        myEditor.putInt("totalScore", totalScore);
 
         myEditor.commit();
     }
@@ -325,13 +336,18 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
 
         @Override
         public void onFinish() {
-            textView.setText("0");
-
+            textView.setText("Time's up");
             //call results page with score
-            Intent instantIntent = new Intent(getApplicationContext(), MainActivity.class);
+            Intent instantIntent = new Intent(getApplicationContext(), QuickdrawResults.class);
+            instantIntent.putExtra("score", score);
+            instantIntent.putExtra("totalScore", totalScore);
+
+            //prevent multiple calls
+            instantIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(instantIntent);
             //reset score
             score = 0;
+            totalScore = 0;
 
         }
     }

@@ -38,11 +38,6 @@ public class MainActivity extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if(getIntent().hasExtra("score")){
-            Integer score = getIntent().getExtras().getInt("score");
-            Log.v("ScoreForU", score.toString());
-        }
-
         // Setting up daily notification to notify the user at 6PM everyday.
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, 18);
