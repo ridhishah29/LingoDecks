@@ -36,6 +36,7 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
     SimpleCursorAdapter adapter;
     Map<String, Integer> answerList = new LinkedHashMap<String, Integer>();
     Map<String, Integer> wordList = new LinkedHashMap<String, Integer>();
+    String languageSet = "";
 
     //created array for linkedHashMap to access indexing - for randomisation.
     ArrayList<String> answerListArray = new ArrayList<String>();
@@ -47,10 +48,13 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
     private SharedPreferences myPref;
 
     private static final int GERMAN_LOADER = 1;
+    private static final int SPANISH_LOADER = 2;
     boolean isRunning = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        SharedPreferences langPref = getSharedPreferences("setLanguage", MODE_PRIVATE);
+        languageSet = langPref.getString("language", "");
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.quickdraw);
@@ -143,6 +147,7 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
         //reset score
         score = 0;
         totalScore = 0;
+        countdowntimer.cancel();
         startActivity(setIntent);
     }
 
@@ -175,8 +180,11 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
     @Override
     protected void onResume() {
         super.onResume();
-
-        getLoaderManager().initLoader(GERMAN_LOADER, null, this);
+        if (languageSet == "en-de") {
+            getLoaderManager().initLoader(GERMAN_LOADER, null, this);
+        }else if (languageSet == "en-es"){
+            getLoaderManager().initLoader(SPANISH_LOADER, null, this);
+        }
 
         myPref = getSharedPreferences("quickDraw", MODE_PRIVATE);
 
@@ -198,7 +206,6 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
         answer_2.setText(answerListArray.get(1));
         answer_3.setText(answerListArray.get(2));
         answer_4.setText(answerListArray.get(3));
-        Log.v("arrayListed", answerListArray.toString());
         score = myPref.getInt("score", 0);
         totalScore = myPref.getInt("totalScore", 0);
     }
@@ -225,6 +232,8 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
     @Override
     protected void onStop() {
         super.onStop();
+        //stops timer when outside of activity i.e. back button pressed
+        countdowntimer.cancel();
     }
 
     @Override
@@ -243,6 +252,14 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
                     Contract.Lingodecks_Tables.COLUMN_GER_ENG
             };
             return new CursorLoader(this, Contract.Lingodecks_Tables.CONTENT_URI1, columns, null, null, "RANDOM()");
+        }
+        else if(id == 2){
+            String[] columns = {
+                    Contract.Lingodecks_Tables._ID,
+                    Contract.Lingodecks_Tables.COLUMN_ESP,
+                    Contract.Lingodecks_Tables.COLUMN_ESP_ENG
+            };
+            return new CursorLoader(this, Contract.Lingodecks_Tables.CONTENT_URI2, columns, null, null, "RANDOM()");
         }
         return null;
     }

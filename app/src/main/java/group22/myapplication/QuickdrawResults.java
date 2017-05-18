@@ -3,6 +3,7 @@ package group22.myapplication;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,12 +18,15 @@ import android.widget.TextView;
 
 
 public class QuickdrawResults extends AppCompatActivity {
+    String languageSet = "";
     TextView scoreText, totalScoreText, percentageScoreText;
     Integer score = 0;
     Integer totalScore = 0;
     private ShareActionProvider mShareActionProvider;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        SharedPreferences langPref = getSharedPreferences("setLanguage", MODE_PRIVATE);
+        languageSet = langPref.getString("language", "");
         super.onCreate(savedInstanceState);
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
         setContentView(R.layout.activity_quickdraw_results);
@@ -61,12 +65,17 @@ public class QuickdrawResults extends AppCompatActivity {
 
         //Create a share action provider
         mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(shareItem);
-
+         String language = "";
         //set the ShareIntent
         if (mShareActionProvider != null) {
             Intent shareIntent = new Intent();
             shareIntent.setAction(Intent.ACTION_SEND);
-            String message = "I got " + score + " out of " + totalScore + " on Lingodecks Quickdraw mode!";
+            if (languageSet == "en-de"){
+                language = "German";
+            }else if (languageSet == "en-es"){
+                language = "Spanish";
+            }
+            String message = "I got " + score + " out of " + totalScore + " on Lingodecks " + language + " Quickdraw mode!";
             shareIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             shareIntent.putExtra(Intent.EXTRA_TEXT, message);
             shareIntent.setType("text/plain");

@@ -44,13 +44,6 @@ public class GameModeActivity extends Activity{
 
             startActivity(intent);
         }
-        else if(button_clicked.equals("Custom Cards")){
-            //set language to be spanish
-            Intent intent = new Intent(this, GameModeActivity.class);
-            startActivity(intent);
-        }
-
-        //THIS IS BROKEN - NEED A FIX
 
         else if(button_clicked.equals("View Cards")){
             //set language to be spanish
@@ -58,4 +51,10 @@ public class GameModeActivity extends Activity{
             startActivity(intent);
         }
     }
+    @Override
+    public void onBackPressed() {
+        Intent setIntent = new Intent(this, MainActivity.class);
+        startActivity(setIntent);
+    }
+
 }
