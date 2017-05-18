@@ -34,7 +34,8 @@
         <activity android:name=".FlashcardActivity" />
         <activity
             android:name=".QuickdrawResults"
-            android:noHistory="true"></activity>
+            android:noHistory="true"
+            android:theme="@style/AppTheme"></activity>
         <activity
             android:name=".Quickdraw"
             android:label="@string/title_activity_quickdraw"
