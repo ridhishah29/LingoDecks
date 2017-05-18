@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+
     <TextView
         android:id="@+id/textView3"
         android:layout_width="match_parent"
@@ -23,33 +24,55 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="547dp"
-        android:layout_height="450dp"
+        android:layout_width="500dp"
+        android:layout_height="300dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="30dp" />
+        android:layout_marginTop="20dp" />
 
-    <EditText
-        android:id="@+id/editText"
-        android:layout_width="428dp"
+    <Button
+        android:id="@+id/choosepic_btn"
+        android:layout_width="400dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
+        android:background="#fff"
+        android:text="Choose Photo"
+        android:textColor="#000"
+        android:textSize="47sp" />
+
+    <EditText
+        android:id="@+id/enterWord"
+        android:layout_width="400dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="15dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Enter Name"
+        android:hint="Enter Name"
         android:textAlignment="center"
-        android:textSize="32sp" />
+        android:textSize="47dp" />
 
     <Button
         android:id="@+id/submitpic_btn"
-        android:layout_width="428dp"
+        android:layout_width="400dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:background="#2BCD32"
         android:text="Submit"
         android:textColor="#fff"
-        android:textSize="32sp" />
+        android:textSize="47dp" />
+
+    <TextView
+        android:id="@+id/errorMsg"
+        android:layout_width="400dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="100dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:textAlignment="center"
+        android:textSize="40dp" />
 
 
 </LinearLayout>
