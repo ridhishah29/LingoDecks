@@ -69,8 +69,6 @@ public class CreateWordCard extends Activity {
                     translateParams params = new translateParams(user_input, languageSet);
                     FetchTranslation myTask = new FetchTranslation();
                     myTask.execute(params);
-
-                    insertDB();
                 }
             }
         });
@@ -129,18 +127,18 @@ public class CreateWordCard extends Activity {
                     @Override
                     public void run() {
 
-                        String compareTxt = userWord;
-                        if (translationResult.equals(compareTxt)) {
+                        if (translationResult.equals(userWord)) {
                             textView.setText("Unable to translate word. Please try another word.");
                             Log.v("Translation", "Not Found");
                         } else {
                             //to get translated word from asynctask to insertdb
                             SharedPreferences.Editor editor = getSharedPreferences("TRANSLATION", MODE_PRIVATE).edit();
-                            editor.remove("translated_word");
-                            editor.apply();
                             editor.putString("translated_word", translationResult);
-                            editor.apply();
+                            editor.commit();
                             Log.v("AsyncTranslate", translationResult);
+                            SharedPreferences langPref = getSharedPreferences("TRANSLATION", MODE_PRIVATE);
+                            String res = langPref.getString("translated_word", "");
+                            Log.v("TEST", res);
                         }
                     }
                 });
@@ -148,6 +146,11 @@ public class CreateWordCard extends Activity {
                 Log.v("NETWORK", "No network connection");
             }
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            insertDB();
         }
     }
 

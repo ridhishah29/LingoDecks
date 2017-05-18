@@ -344,7 +344,6 @@ public class CardDisplay extends Activity implements android.app.LoaderManager.L
         return imageInByte;
     }
 
-
     private void updateDB() {
         ContentValues values;
         String user_input = EditTextView.getText().toString();

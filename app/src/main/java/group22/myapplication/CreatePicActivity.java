@@ -49,6 +49,7 @@ public class CreatePicActivity extends Activity {
     String translatedWord = "";
     TextView textView;
     EditText editText;
+    public static SharedPreferences sp;
     private static final int REQUEST_IMAGE_CAPTURE = 0;
     private static final int REQUEST_GALLERY_IMG = 1;
 
@@ -61,7 +62,7 @@ public class CreatePicActivity extends Activity {
         setContentView(R.layout.picture_card);
         ivImage = (ImageView) findViewById(R.id.imageView);
 
-        //saves edittext on screen rotation
+        //saves edittext and imageview on screen rotation
         editText = (EditText) findViewById(R.id.enterWord);
         if (savedInstanceState != null) {
             String setText = savedInstanceState.getString("setText");
@@ -119,7 +120,6 @@ public class CreatePicActivity extends Activity {
                     FetchTranslation myTask = new FetchTranslation();
                     myTask.execute(params);
                     Log.v("Translated word", translatedWord);
-                    insertDB();
                 }
             }
         });
@@ -146,70 +146,6 @@ public class CreatePicActivity extends Activity {
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] imageInByte = baos.toByteArray();
         return imageInByte;
-    }
-
-    private void insertDB() {
-        ContentValues values;
-        editText = (EditText) findViewById(R.id.enterWord);
-        String user_input = editText.getText().toString();
-
-        if (languageSet == "en-de") {
-            if (languageSet == "en-de") {
-                //check if exists in db
-                Cursor c = getContentResolver().query(Contract.BASE_CONTENT_URI1, null, Contract.Lingodecks_Tables.COLUMN_GER_ENG + " = " + DatabaseUtils.sqlEscapeString(user_input), null, null);
-                if (c.getCount() == 0) {
-                    values = new ContentValues();
-                    values.put(Contract.Lingodecks_Tables.COLUMN_GER_ENG, user_input);
-                    values.put(Contract.Lingodecks_Tables.COLUMN_GER, translatedWord);
-                    values.put(Contract.Lingodecks_Tables.COLUMN_GER_PIC, getBytes());
-
-                    getContentResolver().insert(Contract.Lingodecks_Tables.CONTENT_URI1, values);
-
-                    textView.setText("");
-
-                    Context context = getApplicationContext();
-                    CharSequence text = "Word " + translatedWord + " has been created.";
-                    int duration = Toast.LENGTH_SHORT;
-
-                    Toast toast = Toast.makeText(context, text, duration);
-                    toast.show();
-                } else {
-                    textView.setText("This card has already been created.");
-                }
-
-            } else if (languageSet == "en-es") {
-                //check if exists in db
-                Cursor c = getContentResolver().query(Contract.BASE_CONTENT_URI1, null, Contract.Lingodecks_Tables.COLUMN_GER_ENG + " = " + DatabaseUtils.sqlEscapeString(user_input), null, null);
-                if (c.getCount() == 0) {
-
-                    values = new ContentValues();
-                    values.put(Contract.Lingodecks_Tables.COLUMN_ESP_ENG, user_input);
-                    values.put(Contract.Lingodecks_Tables.COLUMN_ESP, translatedWord);
-                    values.put(Contract.Lingodecks_Tables.COLUMN_ESP_PIC, getBytes());
-
-                    getContentResolver().insert(Contract.Lingodecks_Tables.CONTENT_URI2, values);
-
-                    textView.setText("");
-
-                    Context context = getApplicationContext();
-                    CharSequence text = "Word " + translatedWord + " has been created.";
-                    int duration = Toast.LENGTH_SHORT;
-
-                    Toast toast = Toast.makeText(context, text, duration);
-                    toast.show();
-
-                } else {
-                    textView.setText("This card has already been created.");
-                }
-            }
-        }
-    }
-
-
-    //gallery photo
-    private void galleryIntent() {
-        Intent pickPhoto = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(pickPhoto, REQUEST_GALLERY_IMG);
     }
 
     //photo from camera
@@ -256,6 +192,7 @@ public class CreatePicActivity extends Activity {
         @Override
         protected String doInBackground(translateParams... params) {
             final String translationResult;
+            final String jsonResult;
             final String userWord = params[0].userWord;
             String languageDirection = params[0].languageSet;
 
@@ -280,25 +217,39 @@ public class CreatePicActivity extends Activity {
             if (networkInfo != null && networkInfo.isConnected()) {
                 result = GET(uriBuilder.toString());
 
-                translationResult = getTranslationFromJson(result);
+                jsonResult = getTranslationFromJson(result);
+                //removes json format
+                translationResult = jsonResult.replaceAll("\\[", "").replaceAll("]", "").replaceAll("\"", "");
                 textView = (TextView) findViewById(R.id.errorMsg);
 
                 runOnUiThread(new Runnable() {
                     @Override
-                    public void run() {
+                    public void run() {        Log.v("translation22", translatedWord);
 
-                        String compareTxt = "[\"" + userWord + "\"]";
-                        if (translationResult.equals(compareTxt)) {
+
+                        if (translationResult.equals(userWord)) {
                             textView.setText("Unable to translate word. Please try another word.");
                         } else {
-                            translatedWord = translationResult;
-                        }
+                            //to get translated word from asynctask to insertdb
+                            SharedPreferences.Editor editor = getSharedPreferences("TRANSLATION", MODE_PRIVATE).edit();
+                            editor.putString("translated_word", translationResult);
+                            editor.commit();
+                            Log.v("AsyncTranslate", translationResult);
+                            SharedPreferences langPref = getSharedPreferences("TRANSLATION", MODE_PRIVATE);
+                            String res = langPref.getString("translated_word", "");
+                            Log.v("TEST", res);                        }
                     }
                 });
             } else {
                 Log.v("NETWORK", "No network connection");
             }
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            insertDB();
+            Log.v("inserted", "yes");
         }
 
     }
@@ -363,6 +314,73 @@ public class CreatePicActivity extends Activity {
         }
         is.close();
         return result;
+    }
+
+    private void insertDB() {
+        ContentValues values;
+        editText = (EditText) findViewById(R.id.enterWord);
+        String user_input = editText.getText().toString();
+
+        //gets translated word from asynctask
+        sp = getSharedPreferences("TRANSLATION", MODE_PRIVATE);
+        translatedWord = sp.getString("translated_word", translatedWord);
+
+        if (languageSet == "en-de") {
+            if (languageSet == "en-de") {
+                //check if exists in db
+                Cursor c = getContentResolver().query(Contract.BASE_CONTENT_URI1, null, Contract.Lingodecks_Tables.COLUMN_GER_ENG + " = " + DatabaseUtils.sqlEscapeString(user_input), null, null);
+                if (c.getCount() == 0) {
+                    values = new ContentValues();
+                    values.put(Contract.Lingodecks_Tables.COLUMN_GER_ENG, user_input);
+                    values.put(Contract.Lingodecks_Tables.COLUMN_GER, translatedWord);
+                    values.put(Contract.Lingodecks_Tables.COLUMN_GER_PIC, getBytes());
+
+                    getContentResolver().insert(Contract.Lingodecks_Tables.CONTENT_URI1, values);
+
+                    textView.setText("");
+
+                    Context context = getApplicationContext();
+                    CharSequence text = "Word " + translatedWord + " has been created.";
+                    int duration = Toast.LENGTH_SHORT;
+
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
+                } else {
+                    textView.setText("This card has already been created.");
+                }
+
+            } else if (languageSet == "en-es") {
+                //check if exists in db
+                Cursor c = getContentResolver().query(Contract.BASE_CONTENT_URI1, null, Contract.Lingodecks_Tables.COLUMN_GER_ENG + " = " + DatabaseUtils.sqlEscapeString(user_input), null, null);
+                if (c.getCount() == 0) {
+
+                    values = new ContentValues();
+                    values.put(Contract.Lingodecks_Tables.COLUMN_ESP_ENG, user_input);
+                    values.put(Contract.Lingodecks_Tables.COLUMN_ESP, translatedWord);
+                    values.put(Contract.Lingodecks_Tables.COLUMN_ESP_PIC, getBytes());
+
+                    getContentResolver().insert(Contract.Lingodecks_Tables.CONTENT_URI2, values);
+
+                    textView.setText("");
+
+                    Context context = getApplicationContext();
+                    CharSequence text = "Word " + translatedWord + " has been created.";
+                    int duration = Toast.LENGTH_SHORT;
+
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
+
+                } else {
+                    textView.setText("This card has already been created.");
+                }
+            }
+        }
+    }
+
+    //gallery photo
+    private void galleryIntent() {
+        Intent pickPhoto = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(pickPhoto, REQUEST_GALLERY_IMG);
     }
 }
 

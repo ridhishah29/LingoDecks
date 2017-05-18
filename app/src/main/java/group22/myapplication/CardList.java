@@ -105,7 +105,6 @@ public class CardList extends Activity implements android.app.LoaderManager.Load
         if (cursor != null && cursor.getCount() > 0) {
             while (cursor.moveToNext() && m < cursor.getCount()) {
                 languageArray.add(cursor.getString(0) + " - " + cursor.getString(2) + " - " + cursor.getString(1));
-                Log.v("HERE", cursor.getCount() + "");
                 m++;
             }
         }
