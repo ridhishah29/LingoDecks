@@ -36,7 +36,6 @@ public class CardList extends Activity implements android.app.LoaderManager.Load
         super.onCreate(savedInstanceState);
         setContentView(R.layout.card_index);
 
-
         getLoaderManager().initLoader(GERMAN_LOADER, null, this);
         //final List<String> datasource = new ArrayList(Arrays.asList(dataArray));
         ArrayAdapter<String> adapter = new ArrayAdapter<String>
@@ -55,6 +54,7 @@ public class CardList extends Activity implements android.app.LoaderManager.Load
 
         });
         lv.setAdapter(adapter);
+
     }
 
     @Override

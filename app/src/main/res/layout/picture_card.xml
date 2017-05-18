@@ -47,7 +47,7 @@
         android:layout_marginTop="15dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Enter Name"
+        android:hint="Enter Name"
         android:textAlignment="center"
         android:textSize="20sp" />
 
