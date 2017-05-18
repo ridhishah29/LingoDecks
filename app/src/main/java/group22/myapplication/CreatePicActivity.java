@@ -94,11 +94,16 @@ public class CreatePicActivity extends Activity {
             public void onClick(View view) {
                 editText = (EditText) findViewById(R.id.enterWord);
                 String user_input = editText.getText().toString();
+                textView = (TextView) findViewById(R.id.errorMsg);
+
 
                 if (TextUtils.isEmpty(user_input)) {
-                    textView = (TextView) findViewById(R.id.errorMsg);
-                    textView.setText("Please enter a word");
-                } else {
+                    textView.setText("Please enter a word.");
+                }
+                else if(ivImage.getDrawable() == null) {
+                    textView.setText("Please choose an image.");
+                }
+                else {
                     translateParams params = new translateParams(user_input, languageSet);
                     FetchTranslation myTask = new FetchTranslation();
                     myTask.execute(params);
@@ -118,7 +123,6 @@ public class CreatePicActivity extends Activity {
         byte[] imageInByte = baos.toByteArray();
         return imageInByte;
     }
-
 
     private void insertDB() {
         ContentValues values;

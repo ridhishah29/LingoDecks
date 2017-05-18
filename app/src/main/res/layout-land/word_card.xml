@@ -31,7 +31,6 @@
         android:layout_weight="0.24"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Enter a Word"
         android:textAlignment="center"
         android:textSize="20sp" />
 
@@ -45,5 +44,16 @@
         android:text="Submit"
         android:textColor="#fff"
         android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/testview"
+        android:layout_width="274dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="150dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:textAlignment="center"
+        android:textSize="15sp" />
 
 </LinearLayout>

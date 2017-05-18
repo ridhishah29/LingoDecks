@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -36,8 +37,8 @@ public class CreateWordCard extends Activity {
 
     TextView textView;
     EditText editText;
-    String translatedWord = "";
-    String languageSet = "";
+    public String translatedWord, languageSet;
+    SharedPreferences sp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,43 +53,18 @@ public class CreateWordCard extends Activity {
                 editText = (EditText) findViewById(R.id.wordcard_txt);
                 String user_input = editText.getText().toString();
 
-                if(TextUtils.isEmpty(user_input)) {
+                if (TextUtils.isEmpty(user_input)) {
                     textView = (TextView) findViewById(R.id.testview);
-                    textView.setText("Please enter a word");
+                    textView.setText("Please enter a word.");
                 } else {
                     translateParams params = new translateParams(user_input, languageSet);
                     FetchTranslation myTask = new FetchTranslation();
                     myTask.execute(params);
 
-                   insertDB();
+                    insertDB();
                 }
             }
         });
-//
-//        Intent sendIntent = new Intent();
-//        sendIntent.setAction(Intent.ACTION_SEND);
-//        sendIntent.putExtra(Intent.EXTRA_TEXT, "I got 10000 in Quickdraw!");
-//        sendIntent.setType("text/plain");
-//        startActivity(sendIntent);
-    }
-
-    private void insertDB() {
-        ContentValues values;
-        editText = (EditText) findViewById(R.id.wordcard_txt);
-        String user_input = editText.getText().toString();
-
-        if(languageSet == "en-de") {
-            values = new ContentValues();
-            values.put(Contract.Lingodecks_Tables.COLUMN_GER_ENG, user_input);
-            values.put(Contract.Lingodecks_Tables.COLUMN_GER, translatedWord);
-            getContentResolver().insert(Contract.Lingodecks_Tables.CONTENT_URI1, values);
-        }
-        else if(languageSet == "en-es") {
-            values = new ContentValues();
-            values.put(Contract.Lingodecks_Tables.COLUMN_ESP_ENG, user_input);
-            values.put(Contract.Lingodecks_Tables.COLUMN_ESP, translatedWord);
-            getContentResolver().insert(Contract.Lingodecks_Tables.CONTENT_URI1, values);
-        }
     }
 
     private static class translateParams {
@@ -98,18 +74,22 @@ public class CreateWordCard extends Activity {
         translateParams(String userWord, String languageSet) {
             this.userWord = userWord;
             this.languageSet = languageSet;
-            Log.v("Params", userWord);
-            Log.v("Params", languageSet);
         }
     }
 
     class FetchTranslation extends AsyncTask<translateParams, String, String> {
         String apiKey = "trnsl.1.1.20170322T223343Z.49a364d7daed7f83.b32aca1f9e1461aa3089ebc0f88570e69f0c9873";
         String result = "";
+        String translationResult;
 
         @Override
         protected String doInBackground(translateParams... params) {
-            final String translationResult;
+//            SharedPreferences preferences = getSharedPreferences("TRANSLATION", MODE_PRIVATE);
+//            SharedPreferences.Editor editor = preferences.edit();
+//            editor.remove("word");
+//            editor.commit();
+
+            final String jsonResult;
             final String userWord = params[0].userWord;
             String languageDirection = params[0].languageSet;
 
@@ -131,41 +111,53 @@ public class CreateWordCard extends Activity {
             //check connectivity
             ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-            if (networkInfo != null && networkInfo.isConnected()){
+            if (networkInfo != null && networkInfo.isConnected()) {
                 result = GET(uriBuilder.toString());
 
-                translationResult = getTranslationFromJson(result);
+                jsonResult = getTranslationFromJson(result);
+                //removes json format
+                translationResult = jsonResult.replaceAll("\\[", "").replaceAll("]", "").replaceAll("\"", "");
                 textView = (TextView) findViewById(R.id.testview);
 
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
 
-                        String compareTxt = "[\"" + userWord + "\"]";
-                        if(translationResult.equals(compareTxt)) {
+                        String compareTxt = userWord;
+                        if (translationResult.equals(compareTxt)) {
                             textView.setText("Unable to translate word. Please try another word.");
                             Log.v("Translation", "Not Found");
-                        }
-                        else {
-                            Log.v("Translation", translationResult);
-                            translatedWord = translationResult;
+                        } else {
+                            //to get translated word from asynctask to insertdb
+                            SharedPreferences.Editor editor = getSharedPreferences("TRANSLATION", MODE_PRIVATE).edit();
+                            editor.remove("translated_word");
+                            editor.apply();
+                            editor.putString("translated_word", translationResult);
+                            editor.apply();
+                            Log.v("AsyncTranslate", translationResult);
+
                         }
                     }
                 });
-            }
-            else{
+            } else {
                 Log.v("NETWORK", "No network connection");
             }
-
             return null;
         }
 
+        @Override
+        protected void onPostExecute(String translationResult) {
+            super.onPostExecute(result);
+            translatedWord = translationResult; //assign it to global variable
+            //Log.e("resres", translatedWord);
+        }
     }
-    // Take the raw JSON data to get the data we need?
+
+    // Take the raw JSON data to get the data we need
     private String getTranslationFromJson(String jsonStr) {
         String resultStr;
 
-        try{
+        try {
             // JSON objects that need to be extracted
             final String TEXT = "text";
 
@@ -173,7 +165,7 @@ public class CreateWordCard extends Activity {
             JSONArray resultArray = textJSON.getJSONArray(TEXT);
             resultStr = resultArray.toString();
 
-        }catch(JSONException e){
+        } catch (JSONException e) {
             return null;
         }
         return resultStr;
@@ -185,42 +177,85 @@ public class CreateWordCard extends Activity {
         String result = "";
         URL request = null;
 
-        try{
+        try {
             request = new URL(url);
-        }catch(MalformedURLException e){
+        } catch (MalformedURLException e) {
             e.printStackTrace();
         }
 
         HttpURLConnection conn = null;
-        try{
+        try {
             conn = (HttpURLConnection) request.openConnection();
             conn.connect();
 
             is = conn.getInputStream();
-            if(is != null){
+            if (is != null) {
                 result = convertInputStreamToString(is);
-            }else{
+            } else {
                 result = "Did not work!";
             }
 
-        }catch(IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
 
-        }finally{
+        } finally {
             conn.disconnect();
         }
         return result;
     }
 
-    private String convertInputStreamToString(InputStream is) throws IOException{
+    private String convertInputStreamToString(InputStream is) throws IOException {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is));
         String line;
         String result = "";
-        while((line = bufferedReader.readLine()) != null){
+        while ((line = bufferedReader.readLine()) != null) {
             result += line;
         }
         is.close();
         return result;
+    }
+
+    private void insertDB() {
+        ContentValues values;
+        editText = (EditText) findViewById(R.id.wordcard_txt);
+        String user_input = editText.getText().toString();
+
+        textView = (TextView) findViewById(R.id.testview);
+
+        String[] word = new String[1];
+        word[0] = user_input;
+
+        sp = getSharedPreferences("TRANSLATION", MODE_PRIVATE);
+        translatedWord = sp.getString("translated_word", translatedWord);
+        Log.v("translation22", translatedWord);
+
+        if (languageSet == "en-de") {
+            Cursor c = getContentResolver().query(Contract.BASE_CONTENT_URI1, null, Contract.Lingodecks_Tables.COLUMN_GER_ENG + " = " + DatabaseUtils.sqlEscapeString(user_input), null, null);
+            if (c.getCount() == 0) {
+                values = new ContentValues();
+                values.put(Contract.Lingodecks_Tables.COLUMN_GER_ENG, user_input);
+                values.put(Contract.Lingodecks_Tables.COLUMN_GER, translatedWord);
+                Log.v("translation3", translatedWord);
+
+                getContentResolver().insert(Contract.Lingodecks_Tables.CONTENT_URI1, values);
+            } else {
+                textView.setText("This card has already been created.");
+                Log.v("Exists", "Yes");
+            }
+
+        } else if (languageSet == "en-es") {
+            Cursor c = getContentResolver().query(Contract.BASE_CONTENT_URI2, null, Contract.Lingodecks_Tables.COLUMN_GER_ENG + " = " + DatabaseUtils.sqlEscapeString(user_input), null, null);
+            if (c.getCount() == 0) {
+                values = new ContentValues();
+                values.put(Contract.Lingodecks_Tables.COLUMN_ESP_ENG, user_input);
+                values.put(Contract.Lingodecks_Tables.COLUMN_ESP, translatedWord);
+                getContentResolver().insert(Contract.Lingodecks_Tables.CONTENT_URI2, values);
+                Log.v("Exists", "No");
+            } else {
+                Log.v("Exists", "Yes");
+                textView.setText("This card has already been created.");
+            }
+        }
     }
 
 }

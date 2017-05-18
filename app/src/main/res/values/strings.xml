@@ -5,5 +5,6 @@
     <string name="quickdraw_mode">Quickdraw</string>
     <string name="title_activity_quickdraw">Quickdraw</string>
     <string name="title_create_word">Create Word</string>
+    <string name="placeholder_wordcard">Enter a word in English</string>
 
 </resources>
