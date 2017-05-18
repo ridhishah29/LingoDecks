@@ -36,20 +36,25 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
     SimpleCursorAdapter adapter;
     Map<String, Integer> answerList = new LinkedHashMap<String, Integer>();
     Map<String, Integer> wordList = new LinkedHashMap<String, Integer>();
+    String languageSet = "";
 
     //created array for linkedHashMap to access indexing - for randomisation.
     ArrayList<String> answerListArray = new ArrayList<String>();
     ArrayList<String> wordListArray = new ArrayList<String>();
 
     public Integer score = 0;
+    public Integer totalScore = 0;
 
     private SharedPreferences myPref;
 
     private static final int GERMAN_LOADER = 1;
+    private static final int SPANISH_LOADER = 2;
     boolean isRunning = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        SharedPreferences langPref = getSharedPreferences("setLanguage", MODE_PRIVATE);
+        languageSet = langPref.getString("language", "");
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.quickdraw);
@@ -64,7 +69,11 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
         //grab score from previous question activity - only grabs if the quickdraw activity is not the first activity
         if(getIntent().hasExtra("score")){
             score = getIntent().getExtras().getInt("score");
-            Log.v("ScoreForU", score.toString());
+            totalScore = getIntent().getExtras().getInt("totalScore");
+        }
+        else{
+            score = 0;
+            totalScore = 0;
         }
 
         //if answer button is clicked, it starts a new activity and this saves the time
@@ -137,6 +146,8 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
 
         //reset score
         score = 0;
+        totalScore = 0;
+        countdowntimer.cancel();
         startActivity(setIntent);
     }
 
@@ -149,12 +160,15 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
         if(answerList.get(buttonClicked.getText()) == (wordList.get(question_word.getText()))) {
             Log.v("QuestionStatus", "Correct answer");
             score += 1;
+            totalScore += 1;
         }
         else{
             Log.v("QuestionStatus", "Wrong answer");
+            totalScore += 1;
         }
 
         intent.putExtra("score", score);
+        intent.putExtra("totalScore", totalScore);
         startActivity(intent);
     }
 
@@ -166,8 +180,11 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
     @Override
     protected void onResume() {
         super.onResume();
-
-        getLoaderManager().initLoader(GERMAN_LOADER, null, this);
+        if (languageSet == "en-de") {
+            getLoaderManager().initLoader(GERMAN_LOADER, null, this);
+        }else if (languageSet == "en-es"){
+            getLoaderManager().initLoader(SPANISH_LOADER, null, this);
+        }
 
         myPref = getSharedPreferences("quickDraw", MODE_PRIVATE);
 
@@ -189,8 +206,8 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
         answer_2.setText(answerListArray.get(1));
         answer_3.setText(answerListArray.get(2));
         answer_4.setText(answerListArray.get(3));
-        Log.v("arrayListed", answerListArray.toString());
         score = myPref.getInt("score", 0);
+        totalScore = myPref.getInt("totalScore", 0);
     }
 
     @Override
@@ -207,6 +224,7 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
         myEditor.putString("answer_3", answer_3.getText().toString());
         myEditor.putString("answer_4", answer_4.getText().toString());
         myEditor.putInt("score", score);
+        myEditor.putInt("totalScore", totalScore);
 
         myEditor.commit();
     }
@@ -214,6 +232,8 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
     @Override
     protected void onStop() {
         super.onStop();
+        //stops timer when outside of activity i.e. back button pressed
+        countdowntimer.cancel();
     }
 
     @Override
@@ -232,6 +252,14 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
                     Contract.Lingodecks_Tables.COLUMN_GER_ENG
             };
             return new CursorLoader(this, Contract.Lingodecks_Tables.CONTENT_URI1, columns, null, null, "RANDOM()");
+        }
+        else if(id == 2){
+            String[] columns = {
+                    Contract.Lingodecks_Tables._ID,
+                    Contract.Lingodecks_Tables.COLUMN_ESP,
+                    Contract.Lingodecks_Tables.COLUMN_ESP_ENG
+            };
+            return new CursorLoader(this, Contract.Lingodecks_Tables.CONTENT_URI2, columns, null, null, "RANDOM()");
         }
         return null;
     }
@@ -325,13 +353,18 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
 
         @Override
         public void onFinish() {
-            textView.setText("0");
-
+            textView.setText("Time's up");
             //call results page with score
-            Intent instantIntent = new Intent(getApplicationContext(), MainActivity.class);
+            Intent instantIntent = new Intent(getApplicationContext(), QuickdrawResults.class);
+            instantIntent.putExtra("score", score);
+            instantIntent.putExtra("totalScore", totalScore);
+
+            //prevent multiple calls
+            instantIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(instantIntent);
             //reset score
             score = 0;
+            totalScore = 0;
 
         }
     }

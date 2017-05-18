@@ -12,6 +12,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.text.TextUtils;
 import android.util.Log;
 
 public class LDContentProvider extends ContentProvider {
@@ -43,7 +44,7 @@ public class LDContentProvider extends ContentProvider {
     @Override
     public boolean onCreate() {
         //Initializes the content provider on startup
-        myDBHelper = new LingodecksDBHelper(getContext(),LingodecksDBHelper.DB_NAME,null,LingodecksDBHelper.DB_VERSION);
+        myDBHelper = new LingodecksDBHelper(getContext(), LingodecksDBHelper.DB_NAME, null, LingodecksDBHelper.DB_VERSION);
         return true;
     }
 
@@ -53,7 +54,7 @@ public class LDContentProvider extends ContentProvider {
         int match_code = myUriMatcher.match(uri);
         Cursor myCursor;
 
-        switch(match_code) {
+        switch (match_code) {
             case GERMAN: {
                 SQLiteDatabase db = myDBHelper.getWritableDatabase();
                 myCursor = db.query(
@@ -73,7 +74,7 @@ public class LDContentProvider extends ContentProvider {
                 myCursor = myDBHelper.getReadableDatabase().query(
                         Contract.Lingodecks_Tables.TABLE_GERMAN,
                         projection,
-                        Contract.Lingodecks_Tables._ID + " = '" + ContentUris.parseId(uri) +"'",
+                        Contract.Lingodecks_Tables._ID + " = '" + ContentUris.parseId(uri) + "'",
                         selectionArgs,
                         null,
                         null,
@@ -101,7 +102,7 @@ public class LDContentProvider extends ContentProvider {
                 myCursor = myDBHelper.getReadableDatabase().query(
                         Contract.Lingodecks_Tables.TABLE_SPANISH,
                         projection,
-                        Contract.Lingodecks_Tables._ID + " = '" + ContentUris.parseId(uri) +"'",
+                        Contract.Lingodecks_Tables._ID + " = '" + ContentUris.parseId(uri) + "'",
                         selectionArgs,
                         null,
                         null,
@@ -129,7 +130,7 @@ public class LDContentProvider extends ContentProvider {
                 myCursor = myDBHelper.getReadableDatabase().query(
                         Contract.Lingodecks_Tables.TABLE_SCORE,
                         projection,
-                        Contract.Lingodecks_Tables._ID + " = '" + ContentUris.parseId(uri) +"'",
+                        Contract.Lingodecks_Tables._ID + " = '" + ContentUris.parseId(uri) + "'",
                         selectionArgs,
                         null,
                         null,
@@ -150,7 +151,7 @@ public class LDContentProvider extends ContentProvider {
         //Handles requests for the MIME type of the data at the given URI.
         int match_code = myUriMatcher.match(uri);
 
-        switch(match_code){
+        switch (match_code) {
             case GERMAN:
                 return Contract.Lingodecks_Tables.CONTENT_TYPE_DIR;
             case GERMAN_ID:
@@ -175,36 +176,33 @@ public class LDContentProvider extends ContentProvider {
         int match_code = myUriMatcher.match(uri);
         Uri retUri = null;
 
-        switch(match_code){
-            case GERMAN:{
+        switch (match_code) {
+            case GERMAN: {
                 SQLiteDatabase db = myDBHelper.getWritableDatabase();
-                long _id = db.insert(Contract.Lingodecks_Tables.TABLE_GERMAN,null,values);
+                long _id = db.insert(Contract.Lingodecks_Tables.TABLE_GERMAN, null, values);
                 if (_id > 0) {
                     retUri = Contract.Lingodecks_Tables.buildGermanUriWithID(_id);
-                }
-                else
+                } else
                     throw new SQLException("failed to Insert, please try again!");
                 break;
             }
 
-            case SPANISH:{
+            case SPANISH: {
                 SQLiteDatabase db = myDBHelper.getWritableDatabase();
-                long _id = db.insert(Contract.Lingodecks_Tables.TABLE_SPANISH,null,values);
+                long _id = db.insert(Contract.Lingodecks_Tables.TABLE_SPANISH, null, values);
                 if (_id > 0) {
                     retUri = Contract.Lingodecks_Tables.buildSpanishUriWithID(_id);
-                }
-                else
+                } else
                     throw new SQLException("failed to Insert, please try again!");
                 break;
             }
 
-            case SCORE:{
+            case SCORE: {
                 SQLiteDatabase db = myDBHelper.getWritableDatabase();
-                long _id = db.insert(Contract.Lingodecks_Tables.TABLE_SCORE,null,values);
+                long _id = db.insert(Contract.Lingodecks_Tables.TABLE_SCORE, null, values);
                 if (_id > 0) {
                     retUri = Contract.Lingodecks_Tables.buildScoreUriWithID(_id);
-                }
-                else
+                } else
                     throw new SQLException("failed to Insert, please try again!");
                 break;
             }
@@ -220,21 +218,21 @@ public class LDContentProvider extends ContentProvider {
         //Handles requests to delete one or more rows.
         int match_code = myUriMatcher.match(uri);
 
-        switch(match_code){
-            case GERMAN:{
+        switch (match_code) {
+            case GERMAN: {
                 myDBHelper.clearGermanTable(Contract.Lingodecks_Tables.TABLE_GERMAN);
                 break;
             }
-            case SPANISH:{
+            case SPANISH: {
                 myDBHelper.clearSpanishTable(Contract.Lingodecks_Tables.TABLE_SPANISH);
                 break;
             }
-            case SCORE:{
+            case SCORE: {
                 myDBHelper.clearScoreTable(Contract.Lingodecks_Tables.TABLE_SCORE);
                 break;
             }
             default:
-                throw new UnsupportedOperationException("Not yet implemented");
+                throw new UnsupportedOperationException("Unable to Delete Table!");
         }
 
         return 0;
@@ -242,7 +240,61 @@ public class LDContentProvider extends ContentProvider {
 
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+        //Handles requests to update a row.
+        int match_code = myUriMatcher.match(uri);
+        int count = 0;
+        switch(match_code){
+            case GERMAN: {
+                SQLiteDatabase db = myDBHelper.getWritableDatabase();
+                count = db.update(Contract.Lingodecks_Tables.TABLE_GERMAN, values, selection,
+                        selectionArgs);
+                break;
+            }
 
-        return 0;
+            case GERMAN_ID: {
+                SQLiteDatabase db = myDBHelper.getWritableDatabase();
+                count = db.update(Contract.Lingodecks_Tables.TABLE_GERMAN, values,
+                        Contract.Lingodecks_Tables._ID + " = " + uri.getPathSegments().get(1) +
+                                (!TextUtils.isEmpty(selection) ? " AND (" + selection + ')' : ""), selectionArgs);
+                break;
+            }
+
+            case SPANISH: {
+                SQLiteDatabase db = myDBHelper.getWritableDatabase();
+                count = db.update(Contract.Lingodecks_Tables.TABLE_SPANISH, values, selection,
+                        selectionArgs);
+                break;
+            }
+
+            case SPANISH_ID: {
+                SQLiteDatabase db = myDBHelper.getWritableDatabase();
+                count = db.update(Contract.Lingodecks_Tables.TABLE_SPANISH, values,
+                        Contract.Lingodecks_Tables._ID + " = " + uri.getPathSegments().get(1) +
+                                (!TextUtils.isEmpty(selection) ? " AND (" + selection + ')' : ""), selectionArgs);
+                break;
+            }
+
+            case SCORE: {
+                SQLiteDatabase db = myDBHelper.getWritableDatabase();
+                count = db.update(Contract.Lingodecks_Tables.TABLE_SCORE, values, selection,
+                        selectionArgs);
+                break;
+            }
+
+            case SCORE_ID: {
+                SQLiteDatabase db = myDBHelper.getWritableDatabase();
+                count = db.update(Contract.Lingodecks_Tables.TABLE_SCORE, values,
+                        Contract.Lingodecks_Tables._ID + " = " + uri.getPathSegments().get(1) +
+                                (!TextUtils.isEmpty(selection) ? " AND (" + selection + ')' : ""), selectionArgs);
+                break;
+            }
+            default:
+                throw new UnsupportedOperationException("Update failed!");
+        }
+
+
+        getContext().getContentResolver().notifyChange(uri, null);
+        return count;
     }
+
 }

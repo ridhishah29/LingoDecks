@@ -32,9 +32,14 @@
         <activity android:name=".WordCardDisplay" />
         <activity android:name=".FlashcardActivity" />
         <activity
+            android:name=".QuickdrawResults"
+            android:noHistory="true"
+            android:theme="@style/AppTheme"></activity>
+        <activity
             android:name=".Quickdraw"
             android:label="@string/title_activity_quickdraw"
-            android:parentActivityName=".GameModeActivity">
+            android:parentActivityName=".GameModeActivity"
+            android:noHistory="true">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="group22.myapplication.GameModeActivity" />
@@ -50,7 +55,6 @@
             android:name=".LDContentProvider"
             android:authorities="group22.myapplication"
             android:enabled="true"></provider>
-
     </application>
 
 </manifest>

@@ -38,15 +38,10 @@ public class MainActivity extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if(getIntent().hasExtra("score")){
-            Integer score = getIntent().getExtras().getInt("score");
-            Log.v("ScoreForU", score.toString());
-        }
-
         // Setting up daily notification to notify the user at 6PM everyday.
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 18);
-        calendar.set(Calendar.MINUTE, 00);
+        calendar.set(Calendar.HOUR_OF_DAY, 16);
+        calendar.set(Calendar.MINUTE, 10);
         calendar.set(Calendar.SECOND, 00);
 
         // if the current time is past the set time, then a day is added and the notification will not appear until the next day at 6PM.
@@ -94,116 +89,5 @@ public class MainActivity extends Activity{
 
         }
     }
-
-    // PUT THESE METHODS IN CREATE-A-CARD ACTIVITY
-
-//    class FetchTranslation extends AsyncTask<Void, String, String> {
-//        String apiKey = "trnsl.1.1.20170322T223343Z.49a364d7daed7f83.b32aca1f9e1461aa3089ebc0f88570e69f0c9873";
-//        String languageDirection = "en-de";
-//        String result = "";
-//        //Dummy data
-//        String text = "The cat sat on the mat";
-//
-//        @Override
-//        protected String doInBackground(Void... voids) {
-//            String translationResult;
-//
-//            // Example API call
-//            // https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20170322T223343Z.49a364d7daed7f83.b32aca1f9e1461aa3089ebc0f88570e69f0c9873&text=cat&lang=en-it
-//
-//            //creating URI
-//            final String BASE_URL = "https://translate.yandex.net/api/v1.5/tr.json/translate?";
-//            final String API_KEY = "key";
-//            final String LANGUAGE = "lang";
-//            final String TEXT = "text";
-//
-//            Uri uriBuilder = Uri.parse(BASE_URL).buildUpon()
-//                    .appendQueryParameter(API_KEY, apiKey)
-//                    .appendQueryParameter(TEXT, text)
-//                    .appendQueryParameter(LANGUAGE, languageDirection)
-//                    .build();
-//
-//            //check connectivity
-//            ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-//            NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-//            if (networkInfo != null && networkInfo.isConnected()){
-//                result = GET(uriBuilder.toString());
-//
-//                translationResult = getTranslationFromJson(result);
-//
-//                if(translationResult != null){
-//                    Log.v("Translation", translationResult);
-//                }
-//            }
-//            else{
-//                publishProgress("No network connection");
-//            }
-//
-//            return null;
-//        }
-//
-//    }
-//    // Take the raw JSON data to get the data we need?
-//    private String getTranslationFromJson(String jsonStr) {
-//        String resultStr;
-//
-//        try{
-//            // JSON objects that need to be extracted
-//            final String LANGUAGE = "lang";
-//            final String TEXT = "text";
-//
-//            JSONObject textJSON = new JSONObject(jsonStr);
-//            JSONArray resultArray = textJSON.getJSONArray(TEXT);
-//            resultStr = resultArray.toString();
-//
-//        }catch(JSONException e){
-//            return null;
-//        }
-//        return resultStr;
-//    }
-//
-//    private String GET(String url) {
-//
-//        InputStream is;
-//        String result = "";
-//        URL request = null;
-//
-//        try{
-//            request = new URL(url);
-//        }catch(MalformedURLException e){
-//            e.printStackTrace();
-//        }
-//
-//        HttpURLConnection conn = null;
-//        try{
-//            conn = (HttpURLConnection) request.openConnection();
-//            conn.connect();
-//
-//            is = conn.getInputStream();
-//            if(is != null){
-//                result = convertInputStreamToString(is);
-//            }else{
-//                result = "Did not work!";
-//            }
-//
-//        }catch(IOException e){
-//            e.printStackTrace();
-//
-//        }finally{
-//            conn.disconnect();
-//        }
-//        return result;
-//    }
-//
-//    private String convertInputStreamToString(InputStream is) throws IOException{
-//        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is));
-//        String line;
-//        String result = "";
-//        while((line = bufferedReader.readLine()) != null){
-//            result += line;
-//        }
-//        is.close();
-//        return result;
-//    }
 
 }
