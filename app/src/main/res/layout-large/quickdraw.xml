@@ -35,19 +35,6 @@
             android:textStyle="bold"
             />
 
-        <Button
-            android:layout_width="117dp"
-            android:layout_height="wrap_content"
-            android:text="b"
-            android:layout_alignLeft="@+id/quickdraw_header"
-            android:textAllCaps="false"
-            android:textColor="#fff"
-            android:backgroundTint="@color/quickdraw_color"
-            android:id="@+id/back_btn"
-            android:layout_marginBottom="15dp"
-            android:padding="10dp"
-            android:textSize="63dp"
-            />
     </RelativeLayout>
 
     <TextView
@@ -63,7 +50,7 @@
         android:textSize="47sp" />
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/question_word"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -94,6 +81,7 @@
                 android:padding="5dp"
                 android:layout_marginRight="15dp"
                 android:textSize="47dp"
+                android:onClick="answerBtn"
                 android:layout_weight="1"
                 android:id="@+id/answer_1"/>
 
@@ -106,6 +94,7 @@
                 android:textSize="47dp"
                 android:layout_marginLeft="15dp"
                 android:layout_weight="1"
+                android:onClick="answerBtn"
                 android:id="@+id/answer_2"/>
         </LinearLayout>
 
@@ -136,6 +125,7 @@
                 android:layout_marginRight="15dp"
                 android:textSize="47dp"
                 android:layout_weight="1"
+                android:onClick="answerBtn"
                 android:id="@+id/answer_3"/>
 
             <TextView
@@ -145,6 +135,7 @@
                 android:gravity="center"
                 android:padding="5dp"
                 android:textSize="47dp"
+                android:onClick="answerBtn"
                 android:layout_marginLeft="15dp"
                 android:layout_weight="1"
                 android:id="@+id/answer_4"/>

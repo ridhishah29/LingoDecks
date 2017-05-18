@@ -89,8 +89,18 @@ public class WordCardDisplay extends Activity{
         //delete the card
         DeleteBtn = (Button) findViewById(R.id.deletecard_button);
         final Toast deleteToast = Toast.makeText(toast_context, deleted_text, duration);
-        final String DeleteQuery = "DELETE FROM " + Contract.Lingodecks_Tables.TABLE_GERMAN + " WHERE "
-                + Contract.Lingodecks_Tables._ID + " = " + CardID;
+        final String DeleteQuery;
+        if(languageSet.equals("en-de")) {
+            DeleteQuery = "DELETE FROM " + Contract.Lingodecks_Tables.TABLE_GERMAN + " WHERE "
+                    + Contract.Lingodecks_Tables._ID + " = " + CardID;
+        }
+        else if(languageSet.equals("en-es")){
+            DeleteQuery = "DELETE FROM " + Contract.Lingodecks_Tables.TABLE_SPANISH + " WHERE "
+                    + Contract.Lingodecks_Tables._ID + " = " + CardID;
+        }
+        else{
+            DeleteQuery = "";
+        }
         Log.i(LOG_TAG, DeleteQuery);
         DeleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override

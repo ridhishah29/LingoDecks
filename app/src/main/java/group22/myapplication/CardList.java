@@ -7,6 +7,7 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.content.SharedPreferences;
 
 import android.provider.SyncStateContract;
 import android.util.Log;
@@ -30,6 +31,7 @@ public class CardList extends Activity implements android.app.LoaderManager.Load
     TextView textView;
     String hasPicture = "No";
     private static final int GERMAN_LOADER = 1;
+    private static final int SPANISH_LOADER = 2;
     ArrayList<String> languageArray = new ArrayList<>();
 
     @Override
@@ -37,7 +39,15 @@ public class CardList extends Activity implements android.app.LoaderManager.Load
         super.onCreate(savedInstanceState);
         setContentView(R.layout.card_index);
 
-        getLoaderManager().initLoader(GERMAN_LOADER, null, this);
+        SharedPreferences langPref = getSharedPreferences("setLanguage", MODE_PRIVATE);
+        String lang = langPref.getString("language", "");
+        Log.i("Language", lang);
+        if(lang.equals("en-de")){
+            getLoaderManager().initLoader(GERMAN_LOADER, null, this);
+        }
+        else if(lang.equals("en-es")){
+            getLoaderManager().initLoader(SPANISH_LOADER, null, this);
+        }
         //final List<String> datasource = new ArrayList(Arrays.asList(dataArray));
         ArrayAdapter<String> adapter = new ArrayAdapter<String>
                 (getApplicationContext(),R.layout.card_list,R.id.card_list_textview,languageArray);
@@ -101,15 +111,37 @@ public class CardList extends Activity implements android.app.LoaderManager.Load
 
             return new CursorLoader(this, Contract.Lingodecks_Tables.CONTENT_URI1, columns, null, null, null);
         }
+            else if(id == 2) {
+                String[] columns = {
+                        Contract.Lingodecks_Tables._ID,
+                        Contract.Lingodecks_Tables.COLUMN_ESP,
+                        Contract.Lingodecks_Tables.COLUMN_ESP_ENG
+                };
+
+                return new CursorLoader(this, Contract.Lingodecks_Tables.CONTENT_URI2, columns, null, null, null);
+            }
+
         return null;
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         int m = 0;
+        String cursor0 = "";
+        String cursor1 = "";
+        String cursor2 = "";
         if (cursor != null && cursor.getCount() > 0) {
             while (cursor.moveToNext() && m < cursor.getCount()) {
-                languageArray.add(cursor.getString(0) + " - " + cursor.getString(2) + " - " + cursor.getString(1));
+                if(cursor.getString(0) != null){
+                    cursor0 = cursor.getString(0);
+                }
+                if(cursor.getString(1) != null){
+                    cursor1 = cursor.getString(1);
+                }
+                if(cursor.getString(2) != null){
+                    cursor2 = cursor.getString(2);
+                }
+                languageArray.add(cursor0 + " - " + cursor2 + " - " + cursor1);
                 m++;
 
                 if (!cursor.isNull(3)) {

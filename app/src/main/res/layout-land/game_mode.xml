@@ -20,9 +20,9 @@
         android:text="Quickdraw"
         android:textAllCaps="false"
         android:textColor="#000"
-        android:backgroundTint="#fff"
+        android:backgroundTint="#ffdbdb"
         android:id="@+id/quick_btn"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="5dp"
         android:textSize="25dp"
         android:padding="5dp"
         android:onClick="setModes" />
@@ -34,7 +34,7 @@
         android:backgroundTint="#000"
         android:textColor="#fff"
         android:id="@+id/flash_btn"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="5dp"
         android:textSize="25dp"
         android:padding="5dp"
         android:onClick="setModes" />
@@ -56,7 +56,19 @@
         android:text="Create Cards"
         android:textSize="25dp"
         android:textAllCaps="false"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="5dp"
+        android:padding="5dp"
+        android:onClick="setModes" />
+
+    <Button
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:text="Custom Cards"
+        android:textAllCaps="false"
+        android:textSize="25dp"
+        android:id="@+id/custom_btn"
+        android:backgroundTint="#e9e292"
+        android:layout_marginBottom="5dp"
         android:padding="5dp"
         android:onClick="setModes" />
 
@@ -68,7 +80,7 @@
         android:textSize="25dp"
         android:id="@+id/view_btn"
         android:backgroundTint="#79f232"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="5dp"
         android:padding="5dp"
         android:onClick="setModes" />
 

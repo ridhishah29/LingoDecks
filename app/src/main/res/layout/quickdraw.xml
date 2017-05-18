@@ -35,19 +35,7 @@
         android:textStyle="bold"
         />
 
-    <Button
-        android:layout_width="75dp"
-        android:layout_height="wrap_content"
-        android:text="b"
-        android:layout_alignLeft="@+id/quickdraw_header"
-        android:textAllCaps="false"
-        android:textColor="#fff"
-        android:backgroundTint="@color/quickdraw_color"
-        android:id="@+id/back_btn"
-        android:layout_marginBottom="10dp"
-        android:padding="5dp"
-        android:textSize="40dp"
-        />
+
 </RelativeLayout>
 
     <TextView

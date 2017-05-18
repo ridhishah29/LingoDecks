@@ -63,11 +63,11 @@
     <Button
         android:layout_width="469dp"
         android:layout_height="wrap_content"
-        android:text="Custom Cards"
+        android:text="View Cards"
         android:textAllCaps="false"
         android:textSize="39dp"
         android:id="@+id/custom_btn"
-        android:backgroundTint="#e9e292"
+        android:backgroundTint="#79f232"
         android:layout_marginBottom="25dp"
         android:padding="20dp"
         android:onClick="setModes" />
