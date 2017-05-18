@@ -317,6 +317,7 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
             wordList.clear();
             answerList.clear();
 
+            //scan through entire table row by row
             for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
                 answerList.put(cursor.getString(1), cursor.getInt(0));
                 wordList.put(cursor.getString(2), cursor.getInt(0));
