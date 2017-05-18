@@ -37,12 +37,61 @@
         android:layout_marginTop="30dp"
         android:textSize="40sp"/>
 
-    <Button
-        android:id="@+id/returnBtn"
-        android:layout_width="wrap_content"
+    <EditText
+        android:id="@+id/EditWordtv"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="30dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="70dp"
+        android:textAlignment="center"
+        android:textSize="40sp"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/choosepic_btn"
+        android:layout_width="175dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="115dp"
+        android:layout_marginTop="10dp"
+        android:text="Choose Photo"
+        android:background="#000"
+        android:textSize="25sp"
+        android:textColor="#fff"/>
+
+    <LinearLayout
+        android:id="@+id/btnLL"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="10dp"
+        android:layout_alignParentBottom="true">
+        <Button
+            android:id="@+id/editcard_btn"
+            android:layout_width="175dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="25dp"
+            android:text="Edit"
+            android:background="#e0ebeb"
+            android:textSize="25sp"
+            android:textColor="#000"/>
+
+        <Button
+            android:id="@+id/deletecard_button"
+            android:layout_width="175dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="10dp"
+            android:text="Delete"
+            android:background="#ff3333"
+            android:textSize="25sp"
+            android:textColor="#fff"/>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/returnBtn"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:padding="10dp"
         android:text="Return to index"
         android:textSize="30sp"

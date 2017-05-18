@@ -100,7 +100,6 @@ public class WordCardDisplay extends Activity{
             }
         });
 
-        //
         EditBtn = (Button)findViewById(R.id.editcard_btn) ;
         EditTextView = (EditText)findViewById(R.id.EditWordtv);
         SubmitBtn = (Button)findViewById(R.id.returnBtn);
@@ -111,41 +110,51 @@ public class WordCardDisplay extends Activity{
                 EditTextView.setVisibility(View.VISIBLE);
                 EditTextView.setText(Translation);
                 SubmitBtn.setText("Submit");
+
+            }
+        });
+
+        SubmitBtn.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                //Getting text value of button pressed
+                SubmitBtn = (Button)findViewById(R.id.returnBtn);
+                String button_clicked = SubmitBtn.getText().toString();
+
+                if (button_clicked.equals("Submit")) {
+                    String user_input = EditTextView.getText().toString();
+
+                    if(TextUtils.isEmpty(user_input)) {
+                        //default value
+                        textView9.setText("Please enter a word");
+                        Log.v("hi", user_input);
+                    } else {
+                        //Translates the word the user entered
+                        translateParams params = new translateParams(user_input, languageSet);
+                        FetchTranslation myTask = new FetchTranslation();
+                        myTask.execute(params);
+
+                        //Calls function to update the Database
+                        updateDB();
+                    }
+
+                } else if (button_clicked.equals("Return to index")) {
+
+                    Intent intent = new Intent(WordCardDisplay.this, CardList.class);
+                    startActivity(intent);
+                }
             }
         });
 
 
     }
 
+    /*
     public void setType(View view) {
 
-        //Getting text value of button pressed
-        String button_clicked = SubmitBtn.getText().toString();
 
-        if (button_clicked.equals("Submit")) {
-            String user_input = EditTextView.getText().toString();
-
-            if(TextUtils.isEmpty(user_input)) {
-                //default value
-                textView9.setText("Please enter a word");
-                Log.v("hi", user_input);
-            } else {
-                //Translates the word the user entered
-                translateParams params = new translateParams(user_input, languageSet);
-                FetchTranslation myTask = new FetchTranslation();
-                myTask.execute(params);
-
-                //Calls function to update the Database
-                updateDB();
-            }
-
-        } else if (button_clicked.equals("Return to index")) {
-
-            Intent intent = new Intent(this, CardList.class);
-            startActivity(intent);
-        }
-
-    }
+    }*/
 
 
     private void updateDB() {
@@ -217,6 +226,9 @@ public class WordCardDisplay extends Activity{
             //Content resolver to be passed to LDContentProvider
             getContentResolver().update(uri, values, CardID, null);
         }
+
+        Intent intent = new Intent(this, CardList.class);
+        startActivity(intent);
     }
 
     private static class translateParams {
