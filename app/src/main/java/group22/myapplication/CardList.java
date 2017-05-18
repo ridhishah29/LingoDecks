@@ -28,7 +28,7 @@ public class CardList extends Activity implements android.app.LoaderManager.Load
     private LingodecksDBHelper DBHelper;
     private SQLiteDatabase db;
     TextView textView;
-    String hasPicture;
+    String hasPicture = "No";
     private static final int GERMAN_LOADER = 1;
     ArrayList<String> languageArray = new ArrayList<>();
 
@@ -46,7 +46,12 @@ public class CardList extends Activity implements android.app.LoaderManager.Load
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id){
-                Intent intent = new Intent(CardList.this, WordCardDisplay.class);
+                Intent intent = null;
+                if (hasPicture.equals("No")) {
+                    intent = new Intent(CardList.this, WordCardDisplay.class);
+                }else if (hasPicture.equals("Yes")) {
+                    intent = new Intent(CardList.this, CardDisplay.class);
+                }
 
                 TextView tv = (TextView) view;
                 intent.putExtra("Card",tv.getText().toString());
@@ -106,6 +111,10 @@ public class CardList extends Activity implements android.app.LoaderManager.Load
             while (cursor.moveToNext() && m < cursor.getCount()) {
                 languageArray.add(cursor.getString(0) + " - " + cursor.getString(2) + " - " + cursor.getString(1));
                 m++;
+
+                if (!cursor.isNull(3)) {
+                    hasPicture.equals("Yes");
+                } else hasPicture.equals("No");
             }
         }
     }

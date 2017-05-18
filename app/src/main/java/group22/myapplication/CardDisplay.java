@@ -334,106 +334,7 @@ public class CardDisplay extends Activity implements android.app.LoaderManager.L
         adapter.swapCursor(null);
         Log.v("reset", "reset");
     }
-
-    private byte[] getBytes() {
-        ImageView imageView = (ImageView) findViewById(R.id.imageView);
-        Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] imageInByte = baos.toByteArray();
-        return imageInByte;
-    }
-
-    private void updateDB() {
-        ContentValues values;
-        String user_input = EditTextView.getText().toString();
-
-        if (languageSet == "en-de") {
-            Cursor c = getContentResolver().query(Contract.BASE_CONTENT_URI1, null, Contract.Lingodecks_Tables.COLUMN_GER_ENG + " = " + DatabaseUtils.sqlEscapeString(user_input), null, null);
-            if (c.getCount() == 0) {
-            //on the receiving side
-            //get the intent that started this activity
-            Intent intent = getIntent();
-
-            //grab the data from CardList
-            String message = intent.getStringExtra("Card");
-
-            //split data into arrays
-            String[] details = message.split(" - ");
-
-            //declare variables for array
-            final String CardID = details[0];
-
-            //Convert from string to long
-            long ID = Long.parseLong(CardID);
-
-            //accessing Content_Uri
-            Contract.Lingodecks_Tables ContentURI = new Contract.Lingodecks_Tables();
-            Uri CONTENT_URI1 = ContentURI.CONTENT_URI1;
-
-            //declaring a uri
-            final Uri uri = ContentUris.withAppendedId(CONTENT_URI1, ID);
-
-            //Defining content values to update database
-            values = new ContentValues();
-            values.put(Contract.Lingodecks_Tables.COLUMN_GER_ENG, user_input);
-            values.put(Contract.Lingodecks_Tables.COLUMN_GER, translatedWord);
-            values.put(Contract.Lingodecks_Tables.COLUMN_GER_PIC, getBytes());
-
-            //Content resolver to be passed to LDContentProvider
-            getContentResolver().update(uri, values, CardID, null);
-                Log.v("Exists", "No");
-            } else {
-                textView7.setText("Choose different word! Already Taken");
-                Log.v("Exists", "Yes");
-            }
-        }else if (languageSet == "en-es") {
-            Cursor c = getContentResolver().query(Contract.BASE_CONTENT_URI2, null, Contract.Lingodecks_Tables.COLUMN_ESP_ENG + " = " + DatabaseUtils.sqlEscapeString(user_input), null, null);
-            if (c.getCount() == 0) {
-            //on the receiving side
-            //get the intent that started this activity
-            Intent intent = getIntent();
-
-            //grab the data from CardList
-            String message = intent.getStringExtra("Card");
-
-            //split data into arrays
-            String[] details = message.split(" - ");
-
-            //declare variables for array
-            final String CardID = details[0];
-
-            //Convert from string to long
-            long ID = Long.parseLong(CardID);
-
-            //accessing Content_Uri
-            Contract.Lingodecks_Tables ContentURI = new Contract.Lingodecks_Tables();
-            Uri CONTENT_URI2 = ContentURI.CONTENT_URI2;
-
-            //declaring a uri
-            final Uri uri = ContentUris.withAppendedId(CONTENT_URI2, ID);
-
-            //Defining content values to update database
-            values = new ContentValues();
-            values.put(Contract.Lingodecks_Tables.COLUMN_ESP_ENG, user_input);
-            values.put(Contract.Lingodecks_Tables.COLUMN_ESP, translatedWord);
-            values.put(Contract.Lingodecks_Tables.COLUMN_ESP_PIC, getBytes());
-
-            //Content resolver to be passed to LDContentProvider
-            getContentResolver().update(uri, values, CardID, null);
-                Log.v("Exists", "No");
-            } else {
-                Log.v("Exists", "Yes");
-                textView7.setText("Choose different word! Already Taken");
-            }
-        }
-
-        final Toast editToast = Toast.makeText(toast_context, edit_text, duration);
-        editToast.show();
-        Intent intent = new Intent(this, CardList.class);
-        startActivity(intent);
-    }
-
+    
     private static class translateParams {
         String userWord;
         String languageSet;
@@ -579,5 +480,105 @@ public class CardDisplay extends Activity implements android.app.LoaderManager.L
         }
         is.close();
         return result;
+    }
+
+    private byte[] getBytes() {
+        ImageView imageView = (ImageView) findViewById(R.id.imageView);
+        Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] imageInByte = baos.toByteArray();
+        return imageInByte;
+    }
+
+
+    private void updateDB() {
+        ContentValues values;
+        String user_input = EditTextView.getText().toString();
+
+        if (languageSet == "en-de") {
+            Cursor c = getContentResolver().query(Contract.BASE_CONTENT_URI1, null, Contract.Lingodecks_Tables.COLUMN_GER_ENG + " = " + DatabaseUtils.sqlEscapeString(user_input), null, null);
+            if (c.getCount() == 0) {
+                //on the receiving side
+                //get the intent that started this activity
+                Intent intent = getIntent();
+
+                //grab the data from CardList
+                String message = intent.getStringExtra("Card");
+
+                //split data into arrays
+                String[] details = message.split(" - ");
+
+                //declare variables for array
+                final String CardID = details[0];
+
+                //Convert from string to long
+                long ID = Long.parseLong(CardID);
+
+                //accessing Content_Uri
+                Contract.Lingodecks_Tables ContentURI = new Contract.Lingodecks_Tables();
+                Uri CONTENT_URI1 = ContentURI.CONTENT_URI1;
+
+                //declaring a uri
+                final Uri uri = ContentUris.withAppendedId(CONTENT_URI1, ID);
+
+                //Defining content values to update database
+                values = new ContentValues();
+                values.put(Contract.Lingodecks_Tables.COLUMN_GER_ENG, user_input);
+                values.put(Contract.Lingodecks_Tables.COLUMN_GER, translatedWord);
+                values.put(Contract.Lingodecks_Tables.COLUMN_GER_PIC, getBytes());
+
+                //Content resolver to be passed to LDContentProvider
+                getContentResolver().update(uri, values, CardID, null);
+                Log.v("Exists", "No");
+            } else {
+                textView7.setText("Choose different word! Already Taken");
+                Log.v("Exists", "Yes");
+            }
+        }else if (languageSet == "en-es") {
+            Cursor c = getContentResolver().query(Contract.BASE_CONTENT_URI2, null, Contract.Lingodecks_Tables.COLUMN_ESP_ENG + " = " + DatabaseUtils.sqlEscapeString(user_input), null, null);
+            if (c.getCount() == 0) {
+                //on the receiving side
+                //get the intent that started this activity
+                Intent intent = getIntent();
+
+                //grab the data from CardList
+                String message = intent.getStringExtra("Card");
+
+                //split data into arrays
+                String[] details = message.split(" - ");
+
+                //declare variables for array
+                final String CardID = details[0];
+
+                //Convert from string to long
+                long ID = Long.parseLong(CardID);
+
+                //accessing Content_Uri
+                Contract.Lingodecks_Tables ContentURI = new Contract.Lingodecks_Tables();
+                Uri CONTENT_URI2 = ContentURI.CONTENT_URI2;
+
+                //declaring a uri
+                final Uri uri = ContentUris.withAppendedId(CONTENT_URI2, ID);
+
+                //Defining content values to update database
+                values = new ContentValues();
+                values.put(Contract.Lingodecks_Tables.COLUMN_ESP_ENG, user_input);
+                values.put(Contract.Lingodecks_Tables.COLUMN_ESP, translatedWord);
+                values.put(Contract.Lingodecks_Tables.COLUMN_ESP_PIC, getBytes());
+
+                //Content resolver to be passed to LDContentProvider
+                getContentResolver().update(uri, values, CardID, null);
+                Log.v("Exists", "No");
+            } else {
+                Log.v("Exists", "Yes");
+                textView7.setText("Choose different word! Already Taken");
+            }
+        }
+
+        final Toast editToast = Toast.makeText(toast_context, edit_text, duration);
+        editToast.show();
+        Intent intent = new Intent(this, CardList.class);
+        startActivity(intent);
     }
 }
