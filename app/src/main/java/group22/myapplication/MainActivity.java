@@ -89,5 +89,12 @@ public class MainActivity extends Activity{
 
         }
     }
-
+    public void openGuide(View view) {
+        String button_clicked;
+        button_clicked = ((Button) view).getText().toString();
+        if (button_clicked.equals("User Guide")) {
+            Intent intent = new Intent(this, Readme.class);
+            startActivity(intent);
+        }
+    }
 }

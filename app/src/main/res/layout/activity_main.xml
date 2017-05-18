@@ -42,5 +42,14 @@
         android:onClick="setLanguage"
         android:backgroundTint="#e1faff"
         android:id="@+id/spanish_button" />
+    <Button
+        android:layout_width="154dp"
+        android:layout_height="59dp"
+        android:layout_marginTop="20dp"
+        android:text="User Guide"
+        android:onClick="openGuide"
+        android:textSize="20dp"
+        android:backgroundTint="#e1faff"
+        android:id="@+id/guide_button" />
 
 </LinearLayout>
