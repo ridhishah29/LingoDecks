@@ -115,7 +115,8 @@ public class CardList extends Activity implements android.app.LoaderManager.Load
                 String[] columns = {
                         Contract.Lingodecks_Tables._ID,
                         Contract.Lingodecks_Tables.COLUMN_ESP,
-                        Contract.Lingodecks_Tables.COLUMN_ESP_ENG
+                        Contract.Lingodecks_Tables.COLUMN_ESP_ENG,
+                        Contract.Lingodecks_Tables.COLUMN_ESP_PIC
                 };
 
                 return new CursorLoader(this, Contract.Lingodecks_Tables.CONTENT_URI2, columns, null, null, null);
