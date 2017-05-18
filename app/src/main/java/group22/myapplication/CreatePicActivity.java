@@ -191,8 +191,7 @@ public class CreatePicActivity extends Activity {
 
         @Override
         protected String doInBackground(translateParams... params) {
-            final String translationResult;
-            final String jsonResult;
+            final String translationResult, jsonResult;
             final String userWord = params[0].userWord;
             String languageDirection = params[0].languageSet;
 
@@ -224,9 +223,7 @@ public class CreatePicActivity extends Activity {
 
                 runOnUiThread(new Runnable() {
                     @Override
-                    public void run() {        Log.v("translation22", translatedWord);
-
-
+                    public void run() {
                         if (translationResult.equals(userWord)) {
                             textView.setText("Unable to translate word. Please try another word.");
                         } else {

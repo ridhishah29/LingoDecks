@@ -58,7 +58,7 @@ public class CardDisplay extends Activity implements android.app.LoaderManager.L
     ImageView imageView2, ivImage;
     SimpleCursorAdapter adapter;
     private static final int GERMAN_LOADER = 1;
-
+    public static SharedPreferences sp;
 
     String translatedWord = "";
     String languageSet = "";
@@ -162,7 +162,6 @@ public class CardDisplay extends Activity implements android.app.LoaderManager.L
 
                         //Calls function to update the Database
                         updateDB();
-
                     }
 
                 } else if (button_clicked.equals("Return to index")) {

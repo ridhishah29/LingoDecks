@@ -21,14 +21,14 @@
         app:layout_constraintVertical_bias="0.033"/>
 
     <TextView
-        android:id="@+id/textView10"
+        android:id="@+id/cardTaken"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="120dp"
-        android:textSize="40sp"
+        android:textSize="20sp"
         android:textAlignment="center"/>
 
     <TextView

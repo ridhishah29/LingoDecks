@@ -26,7 +26,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,10 +41,11 @@ import java.net.URL;
 public class WordCardDisplay extends Activity{
 
     public SQLiteDatabase myDB;
-    private TextView textView9, textView10;
+    private TextView textView9, tvCardTaken;
     private EditText EditTextView;
     private Button EditBtn, DeleteBtn, SubmitBtn;
     LingodecksDBHelper DBHelper;
+    public static SharedPreferences sp;
 
     String translatedWord = "";
     String languageSet = "";
@@ -54,7 +54,6 @@ public class WordCardDisplay extends Activity{
     CharSequence deleted_text = "Card was successfully deleted";
     CharSequence edit_text = "Card was successfully edited";
     int duration = Toast.LENGTH_SHORT;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,8 +83,8 @@ public class WordCardDisplay extends Activity{
         //display the data
         textView9 = (TextView)findViewById(R.id.textView9);
         textView9.setText(Translation);
-        textView10 = (TextView)findViewById(R.id.textView10);
-        textView10.setText(English);
+        tvCardTaken = (TextView)findViewById(R.id.cardTaken);
+        tvCardTaken.setText(English);
 
         //delete the card
         DeleteBtn = (Button) findViewById(R.id.deletecard_button);
@@ -149,15 +148,7 @@ public class WordCardDisplay extends Activity{
                 }
             }
         });
-
-
     }
-
-    /*
-    public void setType(View view) {
-
-
-    }*/
 
     private static class translateParams {
         String userWord;
@@ -177,7 +168,7 @@ public class WordCardDisplay extends Activity{
 
         @Override
         protected String doInBackground(translateParams... params) {
-            final String translationResult;
+            final String translationResult, jsonResult;
             final String userWord = params[0].userWord;
             String languageDirection = params[0].languageSet;
 
@@ -202,8 +193,9 @@ public class WordCardDisplay extends Activity{
             if (networkInfo != null && networkInfo.isConnected()){
                 result = GET(uriBuilder.toString());
 
-                translationResult = getTranslationFromJson(result);
-
+                jsonResult = getTranslationFromJson(result);
+                //removes json format
+                translationResult = jsonResult.replaceAll("\\[", "").replaceAll("]", "").replaceAll("\"", "");
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -214,8 +206,14 @@ public class WordCardDisplay extends Activity{
                             Log.v("Translation", "Not Found");
                         }
                         else {
-                            Log.v("Translation", translationResult);
-                            translatedWord = translationResult;
+                            //to get translated word from asynctask to insertdb
+                            SharedPreferences.Editor editor = getSharedPreferences("TRANSLATION", MODE_PRIVATE).edit();
+                            editor.putString("translated_word", translationResult);
+                            editor.commit();
+                            Log.v("AsyncTranslate", translationResult);
+                            SharedPreferences langPref = getSharedPreferences("TRANSLATION", MODE_PRIVATE);
+                            String res = langPref.getString("translated_word", "");
+                            Log.v("TEST", res);
                         }
                     }
                 });
@@ -225,6 +223,12 @@ public class WordCardDisplay extends Activity{
             }
 
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            updateDB();
+            Log.v("inserted", "yes");
         }
 
     }
@@ -294,6 +298,10 @@ public class WordCardDisplay extends Activity{
         ContentValues values;
         String user_input = EditTextView.getText().toString();
 
+        //gets translated word from asynctask
+        sp = getSharedPreferences("TRANSLATION", MODE_PRIVATE);
+        translatedWord = sp.getString("translated_word", translatedWord);
+
         if (languageSet == "en-de") {
             Cursor c = getContentResolver().query(Contract.BASE_CONTENT_URI1, null, Contract.Lingodecks_Tables.COLUMN_GER_ENG + " = " + DatabaseUtils.sqlEscapeString(user_input), null, null);
             if (c.getCount() == 0) {
@@ -329,10 +337,11 @@ public class WordCardDisplay extends Activity{
                 getContentResolver().update(uri, values, CardID, null);
                 Log.v("Exists", "No");
             } else {
-                textView10.setText("Choose different word! Already Taken");
+                tvCardTaken.setText("Choose different word! Already Taken");
                 Log.v("Exists", "Yes");
             }
-        }else if (languageSet == "en-es") {
+        }
+        else if (languageSet == "en-es") {
             Cursor c = getContentResolver().query(Contract.BASE_CONTENT_URI2, null, Contract.Lingodecks_Tables.COLUMN_ESP_ENG + " = " + DatabaseUtils.sqlEscapeString(user_input), null, null);
             if (c.getCount() == 0) {
                 //on the receiving side
@@ -366,16 +375,16 @@ public class WordCardDisplay extends Activity{
                 //Content resolver to be passed to LDContentProvider
                 getContentResolver().update(uri, values, CardID, null);
                 Log.v("Exists", "No");
+
+                final Toast editToast = Toast.makeText(toast_context, edit_text, duration);
+                editToast.show();
+                intent = new Intent(this, CardList.class);
+                startActivity(intent);
             } else {
-                textView10.setText("Choose different word! Already Taken");
+                tvCardTaken.setText("Choose different word! Already Taken");
                 Log.v("Exists", "Yes");
             }
         }
-
-        final Toast editToast = Toast.makeText(toast_context, edit_text, duration);
-        editToast.show();
-        Intent intent = new Intent(this, CardList.class);
-        startActivity(intent);
     }
 
 }
