@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorAccent"
+        android:paddingRight="0dp"
+        android:text="Word card"
+        android:textAlignment="center"
+        android:textColor="@android:color/black"
+        android:textSize="40sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.033"/>
+
+    <TextView
+        android:id="@+id/textView10"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:textSize="40sp"
+        android:textAlignment="center"/>
+
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:textSize="40sp"
+        android:textAlignment="center"/>
+
+    <EditText
+        android:id="@+id/EditWordtv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:textAlignment="center"
+        android:textSize="40sp"
+        android:visibility="gone" />
+    <LinearLayout
+        android:id="@+id/btnLL"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="25dp"
+        android:layout_alignParentBottom="true">
+        <Button
+            android:id="@+id/editcard_btn"
+            android:layout_width="175dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="100dp"
+            android:layout_marginRight="50dp"
+            android:layout_gravity="center"
+            android:text="Edit"
+            android:background="#e0ebeb"
+            android:textSize="25sp"
+            android:textColor="#000"/>
+
+        <Button
+            android:id="@+id/deletecard_button"
+            android:layout_width="175dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="100dp"
+            android:layout_gravity="center"
+            android:text="Delete"
+            android:background="#ff3333"
+            android:textSize="25sp"
+            android:textColor="#fff"/>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/returnBtn"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:padding="10dp"
+        android:text="Return to index"
+        android:textSize="30sp"
+        android:background="#2BCD32"
+        android:textColor="#fff"/>
+
+
+</LinearLayout>

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -29,18 +30,35 @@ public class CardList extends Activity implements android.app.LoaderManager.Load
     private SQLiteDatabase db;
     TextView textView;
     private static final int GERMAN_LOADER = 1;
+    private static final int SPANISH_LOADER = 2;
     ArrayList<String> languageArray = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.card_index);
 
+        SharedPreferences langPref = getSharedPreferences("setLanguage", MODE_PRIVATE);
+        String lang = langPref.getString("language", "");
+        Log.i("Language", lang);
+        if(lang.equals("en-de")){
+            getLoaderManager().initLoader(GERMAN_LOADER, null, this);
+        }
+        else if(lang.equals("en-es")){
+            getLoaderManager().initLoader(SPANISH_LOADER, null, this);
+        }
 
-        getLoaderManager().initLoader(GERMAN_LOADER, null, this);
+
         //final List<String> datasource = new ArrayList(Arrays.asList(dataArray));
+
+        if(savedInstanceState != null){
+            ArrayList<String> getLangArrayState = savedInstanceState.getStringArrayList("ARRAY_STATE");
+            languageArray = getLangArrayState;
+        }
         ArrayAdapter<String> adapter = new ArrayAdapter<String>
-                (getApplicationContext(),R.layout.card_list,R.id.card_list_textview,languageArray);
+                (getApplicationContext(), R.layout.card_list, R.id.card_list_textview, languageArray);
+
 
         ListView lv = (ListView) findViewById(R.id.card_list_view);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener(){
@@ -93,6 +111,15 @@ public class CardList extends Activity implements android.app.LoaderManager.Load
 
             return new CursorLoader(this, Contract.Lingodecks_Tables.CONTENT_URI1, columns, null, null, null);
         }
+        else if(id == 2) {
+            String[] columns = {
+                    Contract.Lingodecks_Tables._ID,
+                    Contract.Lingodecks_Tables.COLUMN_ESP,
+                    Contract.Lingodecks_Tables.COLUMN_ESP_ENG
+            };
+
+            return new CursorLoader(this, Contract.Lingodecks_Tables.CONTENT_URI2, columns, null, null, null);
+        }
         return null;
     }
 
@@ -112,6 +139,21 @@ public class CardList extends Activity implements android.app.LoaderManager.Load
     public void onLoaderReset(Loader<Cursor> loader) {
         //adapter.swapCursor(null);
         Log.v("reset", "reset");
+    }
+
+    @Override
+    protected void onSaveInstanceState (Bundle outState) {
+        ArrayList<String> setLAState = languageArray;
+        outState.putStringArrayList("ARRAY_STATE", setLAState);
+        super.onSaveInstanceState(outState);
+        outState.putStringArrayList("key", setLAState);
+
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        savedInstanceState.getStringArrayList("ARRAY_STATE");
     }
 }
 

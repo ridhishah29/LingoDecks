@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -15,6 +16,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.util.Log;
 import android.widget.Toast;
+
+import java.util.ArrayList;
 
 
 public class WordCardDisplay extends Activity{
@@ -30,6 +33,7 @@ public class WordCardDisplay extends Activity{
     Context toast_context = this;
     CharSequence deleted_text = "Card was successfully deleted";
     int duration = Toast.LENGTH_SHORT;
+    String lang;
 
 
     @Override
@@ -39,6 +43,10 @@ public class WordCardDisplay extends Activity{
 
         DBHelper = new LingodecksDBHelper(this,LingodecksDBHelper.DB_NAME,null,LingodecksDBHelper.DB_VERSION);
         myDB = DBHelper.getWritableDatabase();
+        final String DeleteQuery;
+
+        SharedPreferences langPref = getSharedPreferences("setLanguage", MODE_PRIVATE);
+        String lang = langPref.getString("language", "");
 
         //on the receiving side
         //get the intent that started this activity
@@ -64,9 +72,22 @@ public class WordCardDisplay extends Activity{
         //delete the card
         DeleteBtn = (Button) findViewById(R.id.deletecard_button);
         final Toast deleteToast = Toast.makeText(toast_context, deleted_text, duration);
-        final String DeleteQuery = "DELETE FROM " + Contract.Lingodecks_Tables.TABLE_GERMAN + " WHERE "
-                + Contract.Lingodecks_Tables._ID + " = " + CardID;
-        Log.i(LOG_TAG, DeleteQuery);
+
+        if (lang.equals("en-de")) {
+            DeleteQuery = "DELETE FROM " + Contract.Lingodecks_Tables.TABLE_GERMAN + " WHERE "
+                    + Contract.Lingodecks_Tables._ID + " = " + CardID;
+            Log.i(LOG_TAG, DeleteQuery);
+        }
+        else if(lang.equals("en-es")){
+            DeleteQuery = "DELETE FROM " + Contract.Lingodecks_Tables.TABLE_SPANISH + " WHERE "
+                    + Contract.Lingodecks_Tables._ID + " = " + CardID;
+            Log.i(LOG_TAG, DeleteQuery);
+        }
+        else{
+            DeleteQuery = "";
+        }
+
+
         DeleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -130,6 +151,23 @@ public class WordCardDisplay extends Activity{
             startActivity(intent);
         }
 
+    }
+
+    @Override
+    protected void onSaveInstanceState (Bundle outState) {
+        String translation = textView9.getText().toString();
+        String english = textView10.getText().toString();
+        outState.putString("TRANSLATION", translation);
+        outState.putString("ENGLISH", english);
+        super.onSaveInstanceState(outState);
+        outState.putString("key", translation);
+
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        savedInstanceState.getString("TRANSLATION");
     }
 
 }
