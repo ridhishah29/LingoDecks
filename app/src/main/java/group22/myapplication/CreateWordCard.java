@@ -20,6 +20,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,7 +39,8 @@ public class CreateWordCard extends Activity {
     TextView textView;
     EditText editText;
     public String translatedWord, languageSet;
-    SharedPreferences sp;
+
+    public static SharedPreferences sp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +48,13 @@ public class CreateWordCard extends Activity {
         languageSet = langPref.getString("language", "");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.word_card);
+
+        //saves edittext on screen rotation
+        editText = (EditText) findViewById(R.id.wordcard_txt);
+        if (savedInstanceState != null) {
+            String setText = savedInstanceState.getString("setText");
+            editText.setText(setText);
+        }
 
         Button btnSubmit = (Button) findViewById(R.id.submitword_btn);
         btnSubmit.setOnClickListener(new View.OnClickListener() {
@@ -67,6 +76,7 @@ public class CreateWordCard extends Activity {
         });
     }
 
+    //to get values inside asynctask
     private static class translateParams {
         String userWord;
         String languageSet;
@@ -84,10 +94,6 @@ public class CreateWordCard extends Activity {
 
         @Override
         protected String doInBackground(translateParams... params) {
-//            SharedPreferences preferences = getSharedPreferences("TRANSLATION", MODE_PRIVATE);
-//            SharedPreferences.Editor editor = preferences.edit();
-//            editor.remove("word");
-//            editor.commit();
 
             final String jsonResult;
             final String userWord = params[0].userWord;
@@ -135,7 +141,6 @@ public class CreateWordCard extends Activity {
                             editor.putString("translated_word", translationResult);
                             editor.apply();
                             Log.v("AsyncTranslate", translationResult);
-
                         }
                     }
                 });
@@ -143,13 +148,6 @@ public class CreateWordCard extends Activity {
                 Log.v("NETWORK", "No network connection");
             }
             return null;
-        }
-
-        @Override
-        protected void onPostExecute(String translationResult) {
-            super.onPostExecute(result);
-            translatedWord = translationResult; //assign it to global variable
-            //Log.e("resres", translatedWord);
         }
     }
 
@@ -215,6 +213,13 @@ public class CreateWordCard extends Activity {
         return result;
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        editText = (EditText) findViewById(R.id.wordcard_txt);
+        String text = editText.getText().toString();
+        outState.putString("setText", text);
+    }
+
     private void insertDB() {
         ContentValues values;
         editText = (EditText) findViewById(R.id.wordcard_txt);
@@ -225,11 +230,13 @@ public class CreateWordCard extends Activity {
         String[] word = new String[1];
         word[0] = user_input;
 
+        //gets translated word from asynctask
         sp = getSharedPreferences("TRANSLATION", MODE_PRIVATE);
         translatedWord = sp.getString("translated_word", translatedWord);
         Log.v("translation22", translatedWord);
 
         if (languageSet == "en-de") {
+            //check if exists in db
             Cursor c = getContentResolver().query(Contract.BASE_CONTENT_URI1, null, Contract.Lingodecks_Tables.COLUMN_GER_ENG + " = " + DatabaseUtils.sqlEscapeString(user_input), null, null);
             if (c.getCount() == 0) {
                 values = new ContentValues();
@@ -238,21 +245,37 @@ public class CreateWordCard extends Activity {
                 Log.v("translation3", translatedWord);
 
                 getContentResolver().insert(Contract.Lingodecks_Tables.CONTENT_URI1, values);
+
+                textView.setText("");
+
+                Context context = getApplicationContext();
+                CharSequence text = "Word " + translatedWord + " has been created.";
+                int duration = Toast.LENGTH_SHORT;
+
+                Toast toast = Toast.makeText(context, text, duration);
+                toast.show();
             } else {
                 textView.setText("This card has already been created.");
-                Log.v("Exists", "Yes");
             }
 
         } else if (languageSet == "en-es") {
+            //check if exists in db
             Cursor c = getContentResolver().query(Contract.BASE_CONTENT_URI2, null, Contract.Lingodecks_Tables.COLUMN_GER_ENG + " = " + DatabaseUtils.sqlEscapeString(user_input), null, null);
             if (c.getCount() == 0) {
                 values = new ContentValues();
                 values.put(Contract.Lingodecks_Tables.COLUMN_ESP_ENG, user_input);
                 values.put(Contract.Lingodecks_Tables.COLUMN_ESP, translatedWord);
                 getContentResolver().insert(Contract.Lingodecks_Tables.CONTENT_URI2, values);
-                Log.v("Exists", "No");
+
+                textView.setText("");
+
+                Context context = getApplicationContext();
+                CharSequence text = "Word " + translatedWord + " has been created.";
+                int duration = Toast.LENGTH_SHORT;
+
+                Toast toast = Toast.makeText(context, text, duration);
+                toast.show();
             } else {
-                Log.v("Exists", "Yes");
                 textView.setText("This card has already been created.");
             }
         }

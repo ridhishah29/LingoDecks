@@ -7,7 +7,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -22,6 +25,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,6 +33,7 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -40,7 +45,6 @@ public class CreatePicActivity extends Activity {
 
     private Button btnPictureCard;
     private ImageView ivImage;
-    private Bitmap image;
     String languageSet = "";
     String translatedWord = "";
     TextView textView;
@@ -55,6 +59,16 @@ public class CreatePicActivity extends Activity {
         languageSet = langPref.getString("language", "");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.picture_card);
+        ivImage = (ImageView) findViewById(R.id.imageView);
+
+        //saves edittext on screen rotation
+        editText = (EditText) findViewById(R.id.enterWord);
+        if (savedInstanceState != null) {
+            String setText = savedInstanceState.getString("setText");
+            editText.setText(setText);
+                Bitmap bitmap = savedInstanceState.getParcelable("BitmapImage");
+                ivImage.setImageBitmap(bitmap);
+        }
 
         //Setting the button for the Select Photo Dialog
         btnPictureCard = (Button) findViewById(R.id.choosepic_btn);
@@ -96,14 +110,11 @@ public class CreatePicActivity extends Activity {
                 String user_input = editText.getText().toString();
                 textView = (TextView) findViewById(R.id.errorMsg);
 
-
                 if (TextUtils.isEmpty(user_input)) {
                     textView.setText("Please enter a word.");
-                }
-                else if(ivImage.getDrawable() == null) {
+                } else if (ivImage.getDrawable() == null) {
                     textView.setText("Please choose an image.");
-                }
-                else {
+                } else {
                     translateParams params = new translateParams(user_input, languageSet);
                     FetchTranslation myTask = new FetchTranslation();
                     myTask.execute(params);
@@ -112,6 +123,19 @@ public class CreatePicActivity extends Activity {
                 }
             }
         });
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        editText = (EditText) findViewById(R.id.enterWord);
+        String text = editText.getText().toString();
+        outState.putString("setText", text);
+
+        ivImage = (ImageView) findViewById(R.id.imageView);
+        if (ivImage.getDrawable() != null) {
+            Bitmap bitmap = ((BitmapDrawable) ivImage.getDrawable()).getBitmap();
+            outState.putParcelable("BitmapImage", bitmap);
+        }
     }
 
     // convert from bitmap to byte array
@@ -130,22 +154,57 @@ public class CreatePicActivity extends Activity {
         String user_input = editText.getText().toString();
 
         if (languageSet == "en-de") {
-            values = new ContentValues();
-            values.put(Contract.Lingodecks_Tables.COLUMN_GER_ENG, user_input);
-            values.put(Contract.Lingodecks_Tables.COLUMN_GER, translatedWord);
-            values.put(Contract.Lingodecks_Tables.COLUMN_GER_PIC, getBytes());
+            if (languageSet == "en-de") {
+                //check if exists in db
+                Cursor c = getContentResolver().query(Contract.BASE_CONTENT_URI1, null, Contract.Lingodecks_Tables.COLUMN_GER_ENG + " = " + DatabaseUtils.sqlEscapeString(user_input), null, null);
+                if (c.getCount() == 0) {
+                    values = new ContentValues();
+                    values.put(Contract.Lingodecks_Tables.COLUMN_GER_ENG, user_input);
+                    values.put(Contract.Lingodecks_Tables.COLUMN_GER, translatedWord);
+                    values.put(Contract.Lingodecks_Tables.COLUMN_GER_PIC, getBytes());
 
-            getContentResolver().insert(Contract.Lingodecks_Tables.CONTENT_URI1, values);
+                    getContentResolver().insert(Contract.Lingodecks_Tables.CONTENT_URI1, values);
 
-        } else if (languageSet == "en-es") {
-            values = new ContentValues();
-            values.put(Contract.Lingodecks_Tables.COLUMN_ESP_ENG, user_input);
-            values.put(Contract.Lingodecks_Tables.COLUMN_ESP, translatedWord);
-            values.put(Contract.Lingodecks_Tables.COLUMN_ESP_PIC, getBytes());
+                    textView.setText("");
 
-            getContentResolver().insert(Contract.Lingodecks_Tables.CONTENT_URI2, values);
+                    Context context = getApplicationContext();
+                    CharSequence text = "Word " + translatedWord + " has been created.";
+                    int duration = Toast.LENGTH_SHORT;
+
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
+                } else {
+                    textView.setText("This card has already been created.");
+                }
+
+            } else if (languageSet == "en-es") {
+                //check if exists in db
+                Cursor c = getContentResolver().query(Contract.BASE_CONTENT_URI1, null, Contract.Lingodecks_Tables.COLUMN_GER_ENG + " = " + DatabaseUtils.sqlEscapeString(user_input), null, null);
+                if (c.getCount() == 0) {
+
+                    values = new ContentValues();
+                    values.put(Contract.Lingodecks_Tables.COLUMN_ESP_ENG, user_input);
+                    values.put(Contract.Lingodecks_Tables.COLUMN_ESP, translatedWord);
+                    values.put(Contract.Lingodecks_Tables.COLUMN_ESP_PIC, getBytes());
+
+                    getContentResolver().insert(Contract.Lingodecks_Tables.CONTENT_URI2, values);
+
+                    textView.setText("");
+
+                    Context context = getApplicationContext();
+                    CharSequence text = "Word " + translatedWord + " has been created.";
+                    int duration = Toast.LENGTH_SHORT;
+
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
+
+                } else {
+                    textView.setText("This card has already been created.");
+                }
+            }
         }
     }
+
 
     //gallery photo
     private void galleryIntent() {
@@ -168,11 +227,18 @@ public class CreatePicActivity extends Activity {
             Bitmap photo = (Bitmap) data.getExtras().get("data");
             ivImage.setImageBitmap(photo);
         } else if (requestCode == REQUEST_GALLERY_IMG && resultCode == Activity.RESULT_OK) {
-            Bitmap photo = (Bitmap) data.getExtras().get("data");
-            ivImage.setImageBitmap(photo);
+            try {
+                Uri imageUri = data.getData();
+                InputStream imageStream = getContentResolver().openInputStream(imageUri);
+                Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+                ivImage.setImageBitmap(selectedImage);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
         }
     }
 
+    //to get values inside asynctask
     private static class translateParams {
         String userWord;
         String languageSet;
@@ -232,13 +298,12 @@ public class CreatePicActivity extends Activity {
             } else {
                 Log.v("NETWORK", "No network connection");
             }
-
             return null;
         }
 
     }
 
-    // Take the raw JSON data to get the data we need?
+    // Take the raw JSON data to get the data we need
     private String getTranslationFromJson(String jsonStr) {
         String resultStr;
 
