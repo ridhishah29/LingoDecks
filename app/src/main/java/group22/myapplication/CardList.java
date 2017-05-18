@@ -28,6 +28,7 @@ public class CardList extends Activity implements android.app.LoaderManager.Load
     private LingodecksDBHelper DBHelper;
     private SQLiteDatabase db;
     TextView textView;
+    String hasPicture;
     private static final int GERMAN_LOADER = 1;
     ArrayList<String> languageArray = new ArrayList<>();
 
@@ -46,6 +47,7 @@ public class CardList extends Activity implements android.app.LoaderManager.Load
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id){
                 Intent intent = new Intent(CardList.this, WordCardDisplay.class);
+
                 TextView tv = (TextView) view;
                 intent.putExtra("Card",tv.getText().toString());
                 //start new activity using the intent
@@ -88,7 +90,8 @@ public class CardList extends Activity implements android.app.LoaderManager.Load
             String[] columns = {
                     Contract.Lingodecks_Tables._ID,
                     Contract.Lingodecks_Tables.COLUMN_GER,
-                    Contract.Lingodecks_Tables.COLUMN_GER_ENG
+                    Contract.Lingodecks_Tables.COLUMN_GER_ENG,
+                    Contract.Lingodecks_Tables.COLUMN_GER_PIC
             };
 
             return new CursorLoader(this, Contract.Lingodecks_Tables.CONTENT_URI1, columns, null, null, null);

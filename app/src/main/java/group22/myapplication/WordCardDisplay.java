@@ -8,6 +8,8 @@ import android.content.Context;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 
 import android.net.ConnectivityManager;
@@ -50,6 +52,7 @@ public class WordCardDisplay extends Activity{
     public static final String LOG_TAG = "WordCardDisplay";
     Context toast_context = this;
     CharSequence deleted_text = "Card was successfully deleted";
+    CharSequence edit_text = "Card was successfully edited";
     int duration = Toast.LENGTH_SHORT;
 
 
@@ -162,7 +165,8 @@ public class WordCardDisplay extends Activity{
         String user_input = EditTextView.getText().toString();
 
         if (languageSet == "en-de") {
-
+            Cursor c = getContentResolver().query(Contract.BASE_CONTENT_URI1, null, Contract.Lingodecks_Tables.COLUMN_GER_ENG + " = " + DatabaseUtils.sqlEscapeString(user_input), null, null);
+            if (c.getCount() == 0) {
             //on the receiving side
             //get the intent that started this activity
             Intent intent = getIntent();
@@ -193,8 +197,14 @@ public class WordCardDisplay extends Activity{
 
             //Content resolver to be passed to LDContentProvider
             getContentResolver().update(uri, values, CardID, null);
+                Log.v("Exists", "No");
+            } else {
+                textView10.setText("Choose different word! Already Taken");
+                Log.v("Exists", "Yes");
+            }
         }else if (languageSet == "en-es") {
-
+            Cursor c = getContentResolver().query(Contract.BASE_CONTENT_URI2, null, Contract.Lingodecks_Tables.COLUMN_ESP_ENG + " = " + DatabaseUtils.sqlEscapeString(user_input), null, null);
+            if (c.getCount() == 0) {
             //on the receiving side
             //get the intent that started this activity
             Intent intent = getIntent();
@@ -225,8 +235,15 @@ public class WordCardDisplay extends Activity{
 
             //Content resolver to be passed to LDContentProvider
             getContentResolver().update(uri, values, CardID, null);
+                Log.v("Exists", "No");
+            } else {
+                textView10.setText("Choose different word! Already Taken");
+                Log.v("Exists", "Yes");
+            }
         }
 
+        final Toast editToast = Toast.makeText(toast_context, edit_text, duration);
+        editToast.show();
         Intent intent = new Intent(this, CardList.class);
         startActivity(intent);
     }

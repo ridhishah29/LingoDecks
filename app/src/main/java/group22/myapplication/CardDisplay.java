@@ -389,7 +389,7 @@ public class CardDisplay extends Activity implements android.app.LoaderManager.L
                 Log.v("Exists", "Yes");
             }
         }else if (languageSet == "en-es") {
-            Cursor c = getContentResolver().query(Contract.BASE_CONTENT_URI2, null, Contract.Lingodecks_Tables.COLUMN_GER_ENG + " = " + DatabaseUtils.sqlEscapeString(user_input), null, null);
+            Cursor c = getContentResolver().query(Contract.BASE_CONTENT_URI2, null, Contract.Lingodecks_Tables.COLUMN_ESP_ENG + " = " + DatabaseUtils.sqlEscapeString(user_input), null, null);
             if (c.getCount() == 0) {
             //on the receiving side
             //get the intent that started this activity
