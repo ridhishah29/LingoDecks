@@ -77,7 +77,7 @@ public class CardDisplay extends Activity implements android.app.LoaderManager.L
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.card_index);
+        setContentView(R.layout.picture_card_display);
 
         getLoaderManager().initLoader(GERMAN_LOADER, null, this);
 
@@ -333,7 +333,7 @@ public class CardDisplay extends Activity implements android.app.LoaderManager.L
         adapter.swapCursor(null);
         Log.v("reset", "reset");
     }
-    
+
     private static class translateParams {
         String userWord;
         String languageSet;

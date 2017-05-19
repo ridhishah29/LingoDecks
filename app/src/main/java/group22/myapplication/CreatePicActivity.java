@@ -67,8 +67,8 @@ public class CreatePicActivity extends Activity {
         if (savedInstanceState != null) {
             String setText = savedInstanceState.getString("setText");
             editText.setText(setText);
-                Bitmap bitmap = savedInstanceState.getParcelable("BitmapImage");
-                ivImage.setImageBitmap(bitmap);
+            Bitmap bitmap = savedInstanceState.getParcelable("BitmapImage");
+            ivImage.setImageBitmap(bitmap);
         }
 
         //Setting the button for the Select Photo Dialog
@@ -234,7 +234,8 @@ public class CreatePicActivity extends Activity {
                             Log.v("AsyncTranslate", translationResult);
                             SharedPreferences langPref = getSharedPreferences("TRANSLATION", MODE_PRIVATE);
                             String res = langPref.getString("translated_word", "");
-                            Log.v("TEST", res);                        }
+                            Log.v("TEST", res);
+                        }
                     }
                 });
             } else {

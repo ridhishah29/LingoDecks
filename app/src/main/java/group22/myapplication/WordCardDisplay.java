@@ -2,27 +2,33 @@ package group22.myapplication;
 
 import android.app.Activity;
 
+import android.app.AlertDialog;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +37,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -43,9 +50,12 @@ public class WordCardDisplay extends Activity{
     public SQLiteDatabase myDB;
     private TextView textView9, tvCardTaken;
     private EditText EditTextView;
-    private Button EditBtn, DeleteBtn, SubmitBtn;
+    private Button EditBtn, DeleteBtn, SubmitBtn, btnPictureCard;
+    ImageView ivImage;
     LingodecksDBHelper DBHelper;
     public static SharedPreferences sp;
+    private static final int REQUEST_IMAGE_CAPTURE = 0;
+    private static final int REQUEST_GALLERY_IMG = 1;
 
     String translatedWord = "";
     String languageSet = "";
@@ -65,41 +75,35 @@ public class WordCardDisplay extends Activity{
         DBHelper = new LingodecksDBHelper(this,LingodecksDBHelper.DB_NAME,null,LingodecksDBHelper.DB_VERSION);
         myDB = DBHelper.getWritableDatabase();
 
-        //on the receiving side
-        //get the intent that started this activity
         Intent intent = getIntent();
 
-        //grab the data
         String message = intent.getStringExtra("Card");
-
-        //split data into arrays
         String[] details = message.split(" - ");
 
-        //declare variables for array
         final String CardID = details[0];
         final String Translation = details[1];
         final String English = details[2];
+        //final String Image = details[3];
 
-        //display the data
         textView9 = (TextView)findViewById(R.id.textView9);
         textView9.setText(Translation);
         tvCardTaken = (TextView)findViewById(R.id.cardTaken);
         tvCardTaken.setText(English);
 
-        //delete the card
+        //delete card
         DeleteBtn = (Button) findViewById(R.id.deletecard_button);
         final Toast deleteToast = Toast.makeText(toast_context, deleted_text, duration);
         final String DeleteQuery;
-        if(languageSet.equals("en-de")) {
+        if(languageSet == "en-de") {
             DeleteQuery = "DELETE FROM " + Contract.Lingodecks_Tables.TABLE_GERMAN + " WHERE "
                     + Contract.Lingodecks_Tables._ID + " = " + CardID;
+            Log.v("GermanQuery", "Here");
+
         }
-        else if(languageSet.equals("en-es")){
+        else if(languageSet == "en-es"){
             DeleteQuery = "DELETE FROM " + Contract.Lingodecks_Tables.TABLE_SPANISH + " WHERE "
                     + Contract.Lingodecks_Tables._ID + " = " + CardID;
-        }
-        else{
-            DeleteQuery = "";
+            Log.v("SpanishQuery", "Here");
         }
         Log.i(LOG_TAG, DeleteQuery);
         DeleteBtn.setOnClickListener(new View.OnClickListener() {
@@ -146,9 +150,6 @@ public class WordCardDisplay extends Activity{
                         translateParams params = new translateParams(user_input, languageSet);
                         FetchTranslation myTask = new FetchTranslation();
                         myTask.execute(params);
-
-                        //Calls function to update the Database
-                        updateDB();
                     }
 
                 } else if (button_clicked.equals("Return to index")) {
@@ -158,6 +159,75 @@ public class WordCardDisplay extends Activity{
                 }
             }
         });
+
+        //dialog for choosing image
+        btnPictureCard = (Button) findViewById(R.id.editpic_btn);
+        ivImage = (ImageView) findViewById(R.id.imageView);
+        btnPictureCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Creating an AlertDialog with 3 items from an array
+                final CharSequence[] items = {"Take Photo", "Choose from Gallery", "Cancel"};
+                AlertDialog.Builder builder = new AlertDialog.Builder(WordCardDisplay.this);
+
+                //Setting a title for the Dialog box
+                builder.setTitle("Add Photo!");
+
+                //Choosing the function depending on which button the user clicked
+                builder.setItems(items, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int item) {
+                        if (items[item].equals("Take Photo")) {
+                            dispatchTakePictureIntent();
+
+                        } else if (items[item].equals("Choose from Gallery")) {
+                            galleryIntent();
+
+                        } else if (items[item].equals("Cancel")) {
+                            dialog.dismiss();
+                        }
+                    }
+                });
+
+                builder.show();
+            }
+        });
+    }
+
+    //gallery photo
+    private void galleryIntent() {
+        Intent pickPhoto = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(pickPhoto, REQUEST_GALLERY_IMG);
+    }
+
+    //photo from camera
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        }
+    }
+
+    //shows img in imageview
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        //camera
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
+            Bitmap photo = (Bitmap) data.getExtras().get("data");
+            ivImage.setImageBitmap(photo);
+        }
+        //gallery
+        else if (requestCode == REQUEST_GALLERY_IMG && resultCode == Activity.RESULT_OK) {
+            try {
+                Uri imageUri = data.getData();
+                InputStream imageStream = getContentResolver().openInputStream(imageUri);
+                Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+                ivImage.setImageBitmap(selectedImage);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private static class translateParams {
@@ -242,7 +312,7 @@ public class WordCardDisplay extends Activity{
         }
 
     }
-    // Take the raw JSON data to get the data we need?
+    // Take the raw JSON data to get the data we need
     private String getTranslationFromJson(String jsonStr) {
         String resultStr;
 
@@ -315,30 +385,17 @@ public class WordCardDisplay extends Activity{
         if (languageSet == "en-de") {
             Cursor c = getContentResolver().query(Contract.BASE_CONTENT_URI1, null, Contract.Lingodecks_Tables.COLUMN_GER_ENG + " = " + DatabaseUtils.sqlEscapeString(user_input), null, null);
             if (c.getCount() == 0) {
-                //on the receiving side
-                //get the intent that started this activity
                 Intent intent = getIntent();
 
-                //grab the data from CardList
                 String message = intent.getStringExtra("Card");
-
-                //split data into arrays
                 String[] details = message.split(" - ");
-
-                //declare variables for array
                 final String CardID = details[0];
-
-                //Convert from string to long
                 long ID = Long.parseLong(CardID);
 
-                //accessing Content_Uri
                 Contract.Lingodecks_Tables ContentURI = new Contract.Lingodecks_Tables();
                 Uri CONTENT_URI1 = ContentURI.CONTENT_URI1;
-
-                //declaring a uri
                 final Uri uri = ContentUris.withAppendedId(CONTENT_URI1, ID);
 
-                //Defining content values to update database
                 values = new ContentValues();
                 values.put(Contract.Lingodecks_Tables.COLUMN_GER_ENG, user_input);
                 values.put(Contract.Lingodecks_Tables.COLUMN_GER, translatedWord);
@@ -358,23 +415,14 @@ public class WordCardDisplay extends Activity{
                 //get the intent that started this activity
                 Intent intent = getIntent();
 
-                //grab the data from CardList
                 String message = intent.getStringExtra("Card");
-
-                //split data into arrays
                 String[] details = message.split(" - ");
 
-                //declare variables for array
                 final String CardID = details[0];
-
-                //Convert from string to long
                 long ID = Long.parseLong(CardID);
 
-                //accessing Content_Uri
                 Contract.Lingodecks_Tables ContentURI = new Contract.Lingodecks_Tables();
                 Uri CONTENT_URI2 = ContentURI.CONTENT_URI2;
-
-                //declaring a uri
                 final Uri uri = ContentUris.withAppendedId(CONTENT_URI2, ID);
 
                 //Defining content values to update database
@@ -382,7 +430,6 @@ public class WordCardDisplay extends Activity{
                 values.put(Contract.Lingodecks_Tables.COLUMN_ESP_ENG, user_input);
                 values.put(Contract.Lingodecks_Tables.COLUMN_ESP, translatedWord);
 
-                //Content resolver to be passed to LDContentProvider
                 getContentResolver().update(uri, values, CardID, null);
                 Log.v("Exists", "No");
 
