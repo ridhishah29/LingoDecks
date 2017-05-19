@@ -173,15 +173,6 @@ public class CardDisplay extends Activity implements android.app.LoaderManager.L
         });
 
         ivImage = (ImageView) findViewById(R.id.imageView2);
-
-
-//        PictureBtn = (Button)findViewById(R.id.choosepic_btn);
-//        PictureBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                selectImage();
-//            }
-//        });
     }
 
     public void pickPic(View v){

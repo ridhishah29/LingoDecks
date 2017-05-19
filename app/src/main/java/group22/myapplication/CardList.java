@@ -165,5 +165,11 @@ public class CardList extends Activity implements android.app.LoaderManager.Load
         //adapter.swapCursor(null);
         Log.v("reset", "reset");
     }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, GameModeActivity.class);
+        startActivity(intent);
+    }
 }
 
