@@ -77,7 +77,7 @@ public class CardDisplay extends Activity implements android.app.LoaderManager.L
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.card_index);
+        setContentView(R.layout.picture_card_display);
 
         getLoaderManager().initLoader(GERMAN_LOADER, null, this);
 
@@ -87,7 +87,7 @@ public class CardDisplay extends Activity implements android.app.LoaderManager.L
         SharedPreferences langPref = getSharedPreferences("setLanguage", MODE_PRIVATE);
         languageSet = langPref.getString("language", "");
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.word_card_display);
+        setContentView(R.layout.picture_card_display);
 
         DBHelper = new LingodecksDBHelper(this,LingodecksDBHelper.DB_NAME,null,LingodecksDBHelper.DB_VERSION);
         myDB = DBHelper.getWritableDatabase();
@@ -104,11 +104,11 @@ public class CardDisplay extends Activity implements android.app.LoaderManager.L
 
         //declare variables for array
         final String CardID = details[0];
-        final String Translation = details[1];
-        final String English = details[2];
+        final String English = details[1];
+        final String Translation = details[2];
 
         //display the data
-        textView7.setText(English);
+        textView7.setText(Translation);
 
         //delete the card
         DeleteBtn = (Button) findViewById(R.id.deletecard_button);
@@ -134,7 +134,7 @@ public class CardDisplay extends Activity implements android.app.LoaderManager.L
             public void onClick(View v) {
                 textView7.setVisibility(View.GONE);
                 EditTextView.setVisibility(View.VISIBLE);
-                EditTextView.setText(Translation);
+                EditTextView.setText(English);
                 SubmitBtn.setText("Submit");
 
             }
@@ -153,7 +153,6 @@ public class CardDisplay extends Activity implements android.app.LoaderManager.L
                     if(TextUtils.isEmpty(user_input)) {
                         //default value
                         textView7.setText("Please enter a word");
-                        Log.v("hi", user_input);
                     } else {
                         //Translates the word the user entered
                         translateParams params = new translateParams(user_input, languageSet);
@@ -174,13 +173,19 @@ public class CardDisplay extends Activity implements android.app.LoaderManager.L
         });
 
         ivImage = (ImageView) findViewById(R.id.imageView2);
-        PictureBtn = (Button)findViewById(R.id.choosepic_btn);
-        PictureBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectImage();
-            }
-        });
+
+
+//        PictureBtn = (Button)findViewById(R.id.choosepic_btn);
+//        PictureBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                selectImage();
+//            }
+//        });
+    }
+
+    public void pickPic(View v){
+        selectImage();
     }
 
     @Override
@@ -331,7 +336,7 @@ public class CardDisplay extends Activity implements android.app.LoaderManager.L
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        adapter.swapCursor(null);
+        loader = null;
         Log.v("reset", "reset");
     }
     

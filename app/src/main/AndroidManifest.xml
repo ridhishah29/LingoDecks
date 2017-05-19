@@ -31,6 +31,7 @@
         <activity android:name=".CardDisplay" />
         <activity android:name=".WordCardDisplay" />
         <activity android:name=".FlashcardActivity" />
+        <activity android:name=".Readme" />
         <activity
             android:name=".QuickdrawResults"
             android:theme="@style/AppTheme"></activity>

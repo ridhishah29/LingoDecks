@@ -11,7 +11,7 @@ public class Readme extends Activity {
         super.onCreate(savedInstanceState);
 
         WebView webView = new WebView(this);
-        setContentView(R.layout.readme);
+        setContentView(webView);
 
         String ReadMe = "<html><body>" +
                 "<h1>User Guide</h1><br>" +

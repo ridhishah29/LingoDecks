@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static android.R.attr.data;
+import static android.R.attr.id;
 import static android.os.Build.ID;
 
 
@@ -57,9 +58,9 @@ public class CardList extends Activity implements android.app.LoaderManager.Load
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id){
                 Intent intent = null;
-                if (hasPicture.equals("No")) {
+                if (languageArray.get(position).split(" - ")[3].equals("Word")) {
                     intent = new Intent(CardList.this, WordCardDisplay.class);
-                }else if (hasPicture.equals("Yes")) {
+                }else if (languageArray.get(position).split(" - ")[3].equals("Picture")) {
                     intent = new Intent(CardList.this, CardDisplay.class);
                 }
 
@@ -131,6 +132,7 @@ public class CardList extends Activity implements android.app.LoaderManager.Load
         String cursor0 = "";
         String cursor1 = "";
         String cursor2 = "";
+        String cursor3 = "";
         if (cursor != null && cursor.getCount() > 0) {
             while (cursor.moveToNext() && m < cursor.getCount()) {
                 if(cursor.getString(0) != null){
@@ -142,12 +144,18 @@ public class CardList extends Activity implements android.app.LoaderManager.Load
                 if(cursor.getString(2) != null){
                     cursor2 = cursor.getString(2);
                 }
-                languageArray.add(cursor0 + " - " + cursor2 + " - " + cursor1);
                 m++;
+                //checks to see if data in picture column is of type blob
+                if (cursor.getType(3) == 4) {
+                    hasPicture = "Yes";
+                    cursor3 = "Picture";
+                } else {
+                    hasPicture = "No";
+                    cursor3 = "Word";
+                }
 
-                if (!cursor.isNull(3)) {
-                    hasPicture.equals("Yes");
-                } else hasPicture.equals("No");
+                languageArray.add((cursor0 + " - " + cursor2 + " - " + cursor1 + " - " + cursor3));
+
             }
         }
     }
