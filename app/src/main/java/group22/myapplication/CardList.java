@@ -75,31 +75,6 @@ public class CardList extends Activity implements android.app.LoaderManager.Load
 
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
     //@Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         if(id == 1) {

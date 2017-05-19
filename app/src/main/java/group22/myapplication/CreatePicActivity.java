@@ -67,8 +67,8 @@ public class CreatePicActivity extends Activity {
         if (savedInstanceState != null) {
             String setText = savedInstanceState.getString("setText");
             editText.setText(setText);
-                Bitmap bitmap = savedInstanceState.getParcelable("BitmapImage");
-                ivImage.setImageBitmap(bitmap);
+            Bitmap bitmap = savedInstanceState.getParcelable("BitmapImage");
+            ivImage.setImageBitmap(bitmap);
         }
 
         //Setting the button for the Select Photo Dialog
@@ -191,8 +191,7 @@ public class CreatePicActivity extends Activity {
 
         @Override
         protected String doInBackground(translateParams... params) {
-            final String translationResult;
-            final String jsonResult;
+            final String translationResult, jsonResult;
             final String userWord = params[0].userWord;
             String languageDirection = params[0].languageSet;
 
@@ -224,9 +223,7 @@ public class CreatePicActivity extends Activity {
 
                 runOnUiThread(new Runnable() {
                     @Override
-                    public void run() {        Log.v("translation22", translatedWord);
-
-
+                    public void run() {
                         if (translationResult.equals(userWord)) {
                             textView.setText("Unable to translate word. Please try another word.");
                         } else {
@@ -237,7 +234,8 @@ public class CreatePicActivity extends Activity {
                             Log.v("AsyncTranslate", translationResult);
                             SharedPreferences langPref = getSharedPreferences("TRANSLATION", MODE_PRIVATE);
                             String res = langPref.getString("translated_word", "");
-                            Log.v("TEST", res);                        }
+                            Log.v("TEST", res);
+                        }
                     }
                 });
             } else {

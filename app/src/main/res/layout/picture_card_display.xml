@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/textView6"
@@ -18,14 +19,14 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.033"/>
+        app:layout_constraintVertical_bias="0.033" />
 
     <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="350dp"
-        android:layout_height="300dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="30dp"/>
+        android:id="@+id/viewImage"
+        android:layout_width="309dp"
+        android:layout_height="148dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp" />
 
     <TextView
         android:id="@+id/pictureWord"
@@ -37,6 +38,7 @@
         android:textColor="#000"
         android:layout_marginTop="30dp"
         android:textSize="40dp"/>
+
 
     <EditText
         android:id="@+id/EditWordtv"
@@ -59,34 +61,35 @@
         android:onClick="pickPic"
         android:text="Choose Photo"
         android:background="#000"
-        android:textSize="25sp"
-        android:textColor="#fff"/>
+        android:textColor="#fff"
+        android:textSize="25sp" />
 
     <LinearLayout
         android:id="@+id/btnLL"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_marginTop="10dp"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="10dp">
+
         <Button
             android:id="@+id/editcard_btn"
             android:layout_width="175dp"
             android:layout_height="50dp"
             android:layout_marginLeft="25dp"
-            android:text="Edit"
             android:background="#e0ebeb"
-            android:textSize="25sp"
-            android:textColor="#000"/>
+            android:text="Edit"
+            android:textColor="#000"
+            android:textSize="25sp" />
 
         <Button
             android:id="@+id/deletecard_button"
             android:layout_width="175dp"
             android:layout_height="50dp"
             android:layout_marginLeft="10dp"
-            android:text="Delete"
             android:background="#ff3333"
-            android:textSize="25sp"
-            android:textColor="#fff"/>
+            android:text="Delete"
+            android:textColor="#fff"
+            android:textSize="25sp" />
     </LinearLayout>
 
     <Button
@@ -94,10 +97,10 @@
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:background="#2BCD32"
         android:padding="10dp"
         android:text="Return to index"
-        android:textSize="30sp"
-        android:background="#2BCD32"
-        android:textColor="#fff"/>
+        android:textColor="#fff"
+        android:textSize="30sp" />
 
 </LinearLayout>
