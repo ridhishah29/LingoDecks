@@ -1,6 +1,5 @@
 package group22.myapplication;
 
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentUris;
@@ -49,8 +48,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import static group22.myapplication.Contract.Lingodecks_Tables.COLUMN_GER_PIC;
-
 public class CardDisplay extends Activity implements android.app.LoaderManager.LoaderCallbacks<Cursor>{
 
     private int REQUEST_CAMERA = 0, SELECT_FILE = 1;
@@ -65,7 +62,7 @@ public class CardDisplay extends Activity implements android.app.LoaderManager.L
     public SQLiteDatabase myDB;
     private TextView textView7;
     private EditText EditTextView;
-    private Button EditBtn, DeleteBtn, PictureBtn, SubmitBtn;
+    private Button EditBtn, DeleteBtn, SubmitBtn;
     LingodecksDBHelper DBHelper;
 
     public static final String LOG_TAG = "WordCardDisplay";
@@ -79,7 +76,8 @@ public class CardDisplay extends Activity implements android.app.LoaderManager.L
         super.onCreate(savedInstanceState);
         setContentView(R.layout.picture_card_display);
 
-        getLoaderManager().initLoader(GERMAN_LOADER, null, this);
+        //call to db via cursorloader
+        //getLoaderManager().initLoader(GERMAN_LOADER, null, this);
 
         textView7 = (TextView) findViewById(R.id.pictureWord);
         imageView2 = (ImageView) findViewById(R.id.imageView2);
@@ -108,7 +106,7 @@ public class CardDisplay extends Activity implements android.app.LoaderManager.L
         final String Translation = details[2];
 
         //display the data
-        textView7.setText("hi");
+        textView7.setText("word");
 
         //delete the card
         DeleteBtn = (Button) findViewById(R.id.deletecard_button);
@@ -176,31 +174,6 @@ public class CardDisplay extends Activity implements android.app.LoaderManager.L
 
     public void pickPic(View v){
         selectImage();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
     }
 
     private void selectImage() {
@@ -327,7 +300,6 @@ public class CardDisplay extends Activity implements android.app.LoaderManager.L
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         loader = null;
-        Log.v("reset", "reset");
     }
 
     private static class translateParams {
@@ -347,17 +319,10 @@ public class CardDisplay extends Activity implements android.app.LoaderManager.L
 
         @Override
         protected String doInBackground(translateParams... params) {
-//            SharedPreferences preferences = getSharedPreferences("TRANSLATION", MODE_PRIVATE);
-//            SharedPreferences.Editor editor = preferences.edit();
-//            editor.remove("word");
-//            editor.commit();
 
             final String jsonResult;
             final String userWord = params[0].userWord;
             String languageDirection = params[0].languageSet;
-
-            // Example API call
-            // https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20170322T223343Z.49a364d7daed7f83.b32aca1f9e1461aa3089ebc0f88570e69f0c9873&text=cat&lang=en-it
 
             //creating URI
             final String BASE_URL = "https://translate.yandex.net/api/v1.5/tr.json/translate?";
@@ -411,7 +376,6 @@ public class CardDisplay extends Activity implements android.app.LoaderManager.L
         protected void onPostExecute(String translationResult) {
             super.onPostExecute(result);
             translatedWord = translationResult; //assign it to global variable
-            //Log.e("resres", translatedWord);
         }
     }
 
@@ -525,10 +489,8 @@ public class CardDisplay extends Activity implements android.app.LoaderManager.L
 
                 //Content resolver to be passed to LDContentProvider
                 getContentResolver().update(uri, values, CardID, null);
-                Log.v("Exists", "No");
             } else {
                 textView7.setText("Choose different word! Already Taken");
-                Log.v("Exists", "Yes");
             }
         }else if (languageSet == "en-es") {
             Cursor c = getContentResolver().query(Contract.BASE_CONTENT_URI2, null, Contract.Lingodecks_Tables.COLUMN_ESP_ENG + " = " + DatabaseUtils.sqlEscapeString(user_input), null, null);

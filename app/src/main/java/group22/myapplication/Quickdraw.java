@@ -76,44 +76,6 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
             score = 0;
             totalScore = 0;
         }
-//
-//        if(getIntent().hasExtra("clicked")){
-//            if(getIntent().getExtras().getBoolean("clicked")== true){
-//                Log.v("clickedVar1", "Clicked answer");
-//                if (getIntent().hasExtra("time")){
-//                    String data = getIntent().getExtras().getString("time");
-//                    int getTimerState = Integer.parseInt(data);
-//                    countdowntimer = new CountDownTimerClass(getTimerState * 1000, 1000);
-//                    countdowntimer.start();
-//                }
-//            }else if(clickedActivity == false){
-//                Log.v("clickedVar2", "rotated screen");
-//                SharedPreferences timePref = getSharedPreferences("timer", MODE_PRIVATE);
-//
-//                SharedPreferences.Editor myEditor = timePref.edit();
-//
-//                myEditor.clear();
-//
-//                String timeData = getIntent().getExtras().getString("time");
-//
-//
-//                myEditor.putString("timerCurrent", timeData);
-//
-//                myEditor.commit();
-//
-//                int getTimerState = Integer.parseInt(timePref.getString("timerCurrent", "0"));
-//                countdowntimer = new CountDownTimerClass(getTimerState * 1000, 1000);
-//                countdowntimer.start();
-//            }
-//        }
-//        else{
-//            Log.v("clickedVar3", "enter Screen");
-//            countdowntimer = new CountDownTimerClass(61000, 1000);
-//            countdowntimer.start();
-//
-//        }
-
-
         //if answer button is clicked, it starts a new activity and this saves the time
         if (getIntent().hasExtra("time")){
             String data = getIntent().getExtras().getString("time");
@@ -201,12 +163,10 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
         TextView buttonClicked = (TextView) findViewById(v.getId());
 
         if(answerList.get(buttonClicked.getText()) == (wordList.get(question_word.getText()))) {
-            Log.v("QuestionStatus", "Correct answer");
             score += 1;
             totalScore += 1;
         }
         else{
-            Log.v("QuestionStatus", "Wrong answer");
             totalScore += 1;
         }
         clickedActivity = false;
@@ -239,7 +199,6 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
         //add answers to array saved in sharedpreferences
         for(int i = 1; i < 5; i++){
             answerListArray.add(myPref.getString("answer_" + i, "no data"));
-            Log.v("savedanswer", (myPref.getString("answer_" + i, "no data")));
         }
 
         //reassign question to textview after resuming activity.
@@ -287,8 +246,6 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-
-        Log.v("cursorStatus", "Getting cursor loader");
         if(id == 1) {
             String[] columns = {
                     Contract.Lingodecks_Tables._ID,
@@ -310,9 +267,6 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-
-        Log.v("cursorStatus", "Finished getting loader");
-
         if(cursor != null && cursor.getCount() > 0) {
             wordList.clear();
             answerList.clear();
@@ -355,7 +309,6 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        Log.v("cursorStatus", "resetting loader");
         loader = null;
     }
     // prevent pause screen open when orientation changes
@@ -369,40 +322,11 @@ public class Quickdraw extends Activity implements android.app.LoaderManager.Loa
 
     @Override
     protected void onSaveInstanceState (Bundle outState) {
-        if (getIntent().hasExtra("clicked")) {
-            if (getIntent().getExtras().getBoolean("clicked")== true){
-                //rotated but with answer clicked
-                Log.v("SAVED1", "ASPDOISD");
-                String setTimerState = textView.getText().toString();
-                Log.v("timerSet",setTimerState);
-                outState.putString("TIMER_STATE", setTimerState);
-                outState.putBoolean("TIMER_RUNNING", isRunning);
-                super.onSaveInstanceState(outState);
-                outState.putString("key", setTimerState);
-            }
-            else {
-                Log.v("SAVED2", "ASPDOISD");
-                String setTimerState = textView.getText().toString();
-                Log.v("timerSet",setTimerState);
-                outState.putString("TIMER_STATE", setTimerState);
-                outState.putBoolean("TIMER_RUNNING", isRunning);
-                super.onSaveInstanceState(outState);
-                outState.putString("key", setTimerState);
-            }
-
-        }
-        else{
-            //rotated without clicking
-            Log.v("SAVED3", "ASPDOISD");
-            String setTimerState = textView.getText().toString();
-            Log.v("timerSet",setTimerState);
-            outState.putString("TIMER_STATE", setTimerState);
-            outState.putBoolean("TIMER_RUNNING", isRunning);
-            super.onSaveInstanceState(outState);
-            outState.putString("key", setTimerState);
-        }
-
-
+        String setTimerState = textView.getText().toString();
+        outState.putString("TIMER_STATE", setTimerState);
+        outState.putBoolean("TIMER_RUNNING", isRunning);
+        super.onSaveInstanceState(outState);
+        outState.putString("key", setTimerState);
     }
 
     @Override

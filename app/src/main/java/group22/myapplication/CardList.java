@@ -9,8 +9,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.content.SharedPreferences;
 
-import android.provider.SyncStateContract;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -18,13 +16,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import static android.R.attr.data;
-import static android.R.attr.id;
-import static android.os.Build.ID;
-
 
 public class CardList extends Activity implements android.app.LoaderManager.LoaderCallbacks<Cursor>{
     private LingodecksDBHelper DBHelper;
@@ -42,7 +33,6 @@ public class CardList extends Activity implements android.app.LoaderManager.Load
 
         SharedPreferences langPref = getSharedPreferences("setLanguage", MODE_PRIVATE);
         String lang = langPref.getString("language", "");
-        Log.i("Language", lang);
         if(lang.equals("en-de")){
             getLoaderManager().initLoader(GERMAN_LOADER, null, this);
         }
@@ -137,8 +127,7 @@ public class CardList extends Activity implements android.app.LoaderManager.Load
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        //adapter.swapCursor(null);
-        Log.v("reset", "reset");
+        loader = null;
     }
 
     @Override

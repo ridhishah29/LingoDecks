@@ -119,7 +119,6 @@ public class CreatePicActivity extends Activity {
                     translateParams params = new translateParams(user_input, languageSet);
                     FetchTranslation myTask = new FetchTranslation();
                     myTask.execute(params);
-                    Log.v("Translated word", translatedWord);
                 }
             }
         });
@@ -231,10 +230,8 @@ public class CreatePicActivity extends Activity {
                             SharedPreferences.Editor editor = getSharedPreferences("TRANSLATION", MODE_PRIVATE).edit();
                             editor.putString("translated_word", translationResult);
                             editor.commit();
-                            Log.v("AsyncTranslate", translationResult);
                             SharedPreferences langPref = getSharedPreferences("TRANSLATION", MODE_PRIVATE);
                             String res = langPref.getString("translated_word", "");
-                            Log.v("TEST", res);
                         }
                     }
                 });
@@ -247,7 +244,6 @@ public class CreatePicActivity extends Activity {
         @Override
         protected void onPostExecute(String result) {
             insertDB();
-            Log.v("inserted", "yes");
         }
 
     }

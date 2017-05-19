@@ -129,16 +129,13 @@ public class CreateWordCard extends Activity {
 
                         if (translationResult.equals(userWord)) {
                             textView.setText("Unable to translate word. Please try another word.");
-                            Log.v("Translation", "Not Found");
                         } else {
                             //to get translated word from asynctask to insertdb
                             SharedPreferences.Editor editor = getSharedPreferences("TRANSLATION", MODE_PRIVATE).edit();
                             editor.putString("translated_word", translationResult);
                             editor.commit();
-                            Log.v("AsyncTranslate", translationResult);
                             SharedPreferences langPref = getSharedPreferences("TRANSLATION", MODE_PRIVATE);
                             String res = langPref.getString("translated_word", "");
-                            Log.v("TEST", res);
                         }
                     }
                 });
@@ -236,7 +233,6 @@ public class CreateWordCard extends Activity {
         //gets translated word from asynctask
         sp = getSharedPreferences("TRANSLATION", MODE_PRIVATE);
         translatedWord = sp.getString("translated_word", translatedWord);
-        Log.v("translation22", translatedWord);
 
         if (languageSet == "en-de") {
             //check if exists in db
@@ -245,7 +241,6 @@ public class CreateWordCard extends Activity {
                 values = new ContentValues();
                 values.put(Contract.Lingodecks_Tables.COLUMN_GER_ENG, user_input);
                 values.put(Contract.Lingodecks_Tables.COLUMN_GER, translatedWord);
-                Log.v("translation3", translatedWord);
 
                 getContentResolver().insert(Contract.Lingodecks_Tables.CONTENT_URI1, values);
 

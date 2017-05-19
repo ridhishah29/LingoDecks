@@ -41,7 +41,7 @@ public class MainActivity extends Activity{
         // Setting up daily notification to notify the user at 6PM everyday.
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, 16);
-        calendar.set(Calendar.MINUTE, 50);
+        calendar.set(Calendar.MINUTE, 00);
         calendar.set(Calendar.SECOND, 00);
 
         // if the current time is past the set time, then a day is added and the notification will not appear until the next day at 6PM.
@@ -73,7 +73,6 @@ public class MainActivity extends Activity{
             edit.putString("language", "en-de");
             edit.commit();
 
-            //intent.putExtra("lang","en-de");
             startActivity(intent);
         }
         else if(button_clicked.equals("Spanish")){
