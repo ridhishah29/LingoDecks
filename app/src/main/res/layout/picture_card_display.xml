@@ -56,8 +56,9 @@
         android:layout_height="50dp"
         android:layout_marginLeft="115dp"
         android:layout_marginTop="10dp"
-        android:background="#000"
+        android:onClick="pickPic"
         android:text="Choose Photo"
+        android:background="#000"
         android:textColor="#fff"
         android:textSize="25sp" />
 

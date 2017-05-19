@@ -89,5 +89,21 @@ public class MainActivity extends Activity{
 
         }
     }
-
+    public void openGuide(View view) {
+        String button_clicked;
+        button_clicked = ((Button) view).getText().toString();
+        if (button_clicked.equals("User Guide")) {
+            Intent intent = new Intent(this, Readme.class);
+            startActivity(intent);
+        }
+    }
+    @Override
+    public void onBackPressed() {
+        //Quit app
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
 }
+
