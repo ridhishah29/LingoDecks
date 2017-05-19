@@ -81,7 +81,7 @@ public class CardDisplay extends Activity implements android.app.LoaderManager.L
 
         getLoaderManager().initLoader(GERMAN_LOADER, null, this);
 
-        textView7 = (TextView) findViewById(R.id.textView7);
+        textView7 = (TextView) findViewById(R.id.pictureWord);
         imageView2 = (ImageView) findViewById(R.id.imageView2);
 
         SharedPreferences langPref = getSharedPreferences("setLanguage", MODE_PRIVATE);
@@ -108,7 +108,7 @@ public class CardDisplay extends Activity implements android.app.LoaderManager.L
         final String Translation = details[2];
 
         //display the data
-        textView7.setText(Translation);
+        textView7.setText("hi");
 
         //delete the card
         DeleteBtn = (Button) findViewById(R.id.deletecard_button);
@@ -172,7 +172,7 @@ public class CardDisplay extends Activity implements android.app.LoaderManager.L
             }
         });
 
-        ivImage = (ImageView) findViewById(R.id.imageView2);
+        //ivImage = (ImageView) findViewById(R.id.imageView2);
     }
 
     public void pickPic(View v){

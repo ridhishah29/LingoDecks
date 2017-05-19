@@ -28,14 +28,15 @@
         android:layout_marginTop="30dp"/>
 
     <TextView
-        android:id="@+id/textView7"
+        android:id="@+id/pictureWord"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
+        android:textColor="#000"
         android:layout_marginTop="30dp"
-        android:textSize="40sp"/>
+        android:textSize="40dp"/>
 
     <EditText
         android:id="@+id/EditWordtv"
